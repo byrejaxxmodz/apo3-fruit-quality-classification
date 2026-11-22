@@ -1,0 +1,6 @@
+modelo,mejores_hiperparametros,f1_macro_cv,f1_macro_cv_std,f1_macro_train
+logreg,"{""clf__C"": 10}",0.7028047592962727,0.022491617051066948,0.7314580221928321
+svm,"{""clf__C"": 10, ""clf__gamma"": ""scale"", ""clf__kernel"": ""rbf""}",0.9051075396457172,0.028969986486182424,0.9895298228906135
+random_forest,"{""clf__max_depth"": null, ""clf__min_samples_leaf"": 3, ""clf__n_estimators"": 200}",0.8462714330636313,0.03301686921596637,0.9938765921551033
+knn,"{""clf__n_neighbors"": 3, ""clf__weights"": ""uniform""}",0.8810401638623702,0.034794214587402686,0.9648930014799323
+mlp,"{""clf__alpha"": 0.01, ""clf__hidden_layer_sizes"": [128, 64]}",0.8604541208960109,0.031529580458926613,0.9815740317410906

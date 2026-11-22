@@ -1,0 +1,8 @@
+{
+  "lr": 0.001,
+  "batch": 32,
+  "dropout": 0.3,
+  "weight_decay": 0.0001,
+  "best_f1_val": 0.7590513674390927,
+  "epochs_run": 50
+}
