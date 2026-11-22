@@ -1,8 +1,98 @@
 {
-  "lr": 0.001,
-  "batch": 32,
-  "dropout": 0.3,
-  "weight_decay": 0.0001,
-  "best_f1_val": 0.7590513674390927,
-  "epochs_run": 50
+  "mejor": {
+    "lr": 0.0003,
+    "dropout": 0.5,
+    "widths": [
+      32,
+      64,
+      128
+    ],
+    "batch": 32,
+    "weight_decay": 0.0001
+  },
+  "best_f1_val": 0.7336,
+  "epochs": 35,
+  "patience": 8,
+  "rejilla": [
+    {
+      "lr": 0.001,
+      "dropout": 0.3,
+      "widths": "(32, 64, 128)",
+      "params": 101923,
+      "f1_val": 0.6901,
+      "mejor_epoca": 16,
+      "epocas_corridas": 24,
+      "segundos": 443.8
+    },
+    {
+      "lr": 0.001,
+      "dropout": 0.3,
+      "widths": "(16, 32, 64)",
+      "params": 28051,
+      "f1_val": 0.6234,
+      "mejor_epoca": 2,
+      "epocas_corridas": 10,
+      "segundos": 118.6
+    },
+    {
+      "lr": 0.001,
+      "dropout": 0.5,
+      "widths": "(32, 64, 128)",
+      "params": 101923,
+      "f1_val": 0.7225,
+      "mejor_epoca": 16,
+      "epocas_corridas": 24,
+      "segundos": 459.4
+    },
+    {
+      "lr": 0.001,
+      "dropout": 0.5,
+      "widths": "(16, 32, 64)",
+      "params": 28051,
+      "f1_val": 0.6331,
+      "mejor_epoca": 2,
+      "epocas_corridas": 10,
+      "segundos": 124.2
+    },
+    {
+      "lr": 0.0003,
+      "dropout": 0.3,
+      "widths": "(32, 64, 128)",
+      "params": 101923,
+      "f1_val": 0.704,
+      "mejor_epoca": 29,
+      "epocas_corridas": 35,
+      "segundos": 748.7
+    },
+    {
+      "lr": 0.0003,
+      "dropout": 0.3,
+      "widths": "(16, 32, 64)",
+      "params": 28051,
+      "f1_val": 0.5976,
+      "mejor_epoca": 2,
+      "epocas_corridas": 10,
+      "segundos": 139.4
+    },
+    {
+      "lr": 0.0003,
+      "dropout": 0.5,
+      "widths": "(32, 64, 128)",
+      "params": 101923,
+      "f1_val": 0.7336,
+      "mejor_epoca": 25,
+      "epocas_corridas": 33,
+      "segundos": 703.7
+    },
+    {
+      "lr": 0.0003,
+      "dropout": 0.5,
+      "widths": "(16, 32, 64)",
+      "params": 28051,
+      "f1_val": 0.6234,
+      "mejor_epoca": 2,
+      "epocas_corridas": 10,
+      "segundos": 152.7
+    }
+  ]
 }

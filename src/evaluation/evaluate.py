@@ -59,7 +59,8 @@ def predict_cnn(df_test: pd.DataFrame) -> np.ndarray:
     from src.training.train_cnn import to_tensor
 
     ckpt = torch.load(config.CHECKPOINTS_DIR / "cnn.pt", map_location="cpu")
-    model = SmallCNN(len(config.QUALITY_CLASSES), dropout=ckpt["dropout"])
+    widths = tuple(ckpt.get("widths", (32, 64, 128)))  # la búsqueda puede ajustar el ancho
+    model = SmallCNN(len(config.QUALITY_CLASSES), widths=widths, dropout=ckpt["dropout"])
     model.load_state_dict(ckpt["state_dict"])
     model.eval()
     x = torch.stack([to_tensor(cv2.imread(str(config.ROOT / c))) for c in df_test["crop"]])

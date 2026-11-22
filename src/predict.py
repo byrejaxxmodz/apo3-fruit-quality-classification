@@ -56,7 +56,8 @@ def load_model(name: str):
 
         from src.models.cnn import SmallCNN
         ckpt = torch.load(config.CHECKPOINTS_DIR / "cnn.pt", map_location="cpu")
-        m = SmallCNN(len(config.QUALITY_CLASSES), dropout=ckpt["dropout"])
+        widths = tuple(ckpt.get("widths", (32, 64, 128)))
+        m = SmallCNN(len(config.QUALITY_CLASSES), widths=widths, dropout=ckpt["dropout"])
         m.load_state_dict(ckpt["state_dict"])
         return m.eval()
     return joblib.load(config.CHECKPOINTS_DIR / f"{name}.joblib")

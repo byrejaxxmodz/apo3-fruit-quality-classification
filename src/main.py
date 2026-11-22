@@ -9,7 +9,8 @@ Uso (desde la raíz del repo):
     python -m src.main preprocess    # segmenta, recorta, tamaño, splits
     python -m src.main features      # matriz de características
     python -m src.main train         # modelos clásicos (GridSearchCV)
-    python -m src.main train_cnn     # CNN desde cero
+    python -m src.main train_cnn     # CNN desde cero (una configuración)
+    python -m src.main search_cnn    # búsqueda de hiperparámetros de la CNN
     python -m src.main evaluate      # métricas de calidad en test + figuras
     python -m src.main evaluate_size # fiabilidad de la estimación de tamaño
     python -m src.main all           # provenance -> evaluate_size (sin descargar)
@@ -42,6 +43,8 @@ def run(step: str) -> None:
         from src.training.train_classical import main
     elif step == "train_cnn":
         from src.training.train_cnn import main
+    elif step == "search_cnn":  # opcional: no entra en `all` (sustituye a train_cnn)
+        from src.training.search_cnn import main
     elif step == "evaluate":
         from src.evaluation.evaluate import main
     elif step == "evaluate_size":

@@ -33,7 +33,7 @@ _(Solo lo que el lector necesita: Otsu, características de color y textura, SVM
 | KNN (k=3) | 0.88 | 0.93 | 0.97 | **0.84** | **0.80** | 0.82 |
 | Random Forest | 0.85 | 0.93 | 0.97 | 0.71 | 0.40 | 0.75 |
 | MLP | 0.86 | 0.90 | 0.96 | 0.71 | 0.40 | 0.71 |
-| CNN desde cero | — | 0.85 | 0.92 | 0.68 | 0.40 | 0.93 |
+| CNN desde cero (ajustada) | 0.73 (val) | 0.81 | 0.89 | 0.48 | 0.00 | 0.93 |
 | Regresión logística | 0.70 | 0.78 | 0.89 | 0.44 | 0.00 | 0.98 |
 | Línea base | — | 0.22 | 0.33 | 0.23 | 0.00 | 0.00 |
 
@@ -84,6 +84,31 @@ otro ángulo, así que deberían recibir el mismo tamaño (`evaluate_size.py`).
 - El diámetro en píxeles es **físicamente estable** (CV intra-grupo ≈ 0.01–0.02: la misma fruta mide casi igual entre tomas), pero la **clasificación por terciles es frágil en las fronteras**, sobre todo en las fotos propias (κ = 0.52 vs. 0.72 en Kaggle): un cambio pequeño de d_norm cruza el umbral del tercil.
 - Sin objeto de referencia ni distancia fija, el tamaño en píxeles **solo es comparable dentro de la misma fruta y fuente**, no en centímetros reales (ver trabajo futuro).
 - Figura: `docs/figuras/tamano_d_norm.svg` (distribución de d_norm por fuente). Datos: `tamano_distribucion.csv`, `tamano_fiabilidad.csv`.
+
+### 4.2 Ajuste de hiperparámetros de la CNN
+
+Se exploró una rejilla de 8 configuraciones (`src/training/search_cnn.py`),
+entrenando cada una con el mismo presupuesto (35 épocas, parada temprana con
+paciencia 8) y comparando por **F1 macro en validación**. Fijos: batch 32,
+weight decay 1e-4, Adam + recocido coseno, entropía cruzada ponderada.
+
+| lr | dropout | widths | params | F1 val | Mejor época |
+|---|---|---|---:|---:|---:|
+| **3e-4** | **0.5** | **(32,64,128)** | **101 923** | **0.734** | 25 |
+| 1e-3 | 0.5 | (32,64,128) | 101 923 | 0.723 | 16 |
+| 3e-4 | 0.3 | (32,64,128) | 101 923 | 0.704 | 29 |
+| 1e-3 | 0.3 | (32,64,128) | 101 923 | 0.690 | 16 |
+| 1e-3 | 0.5 | (16,32,64) | 28 051 | 0.633 | 2 |
+| 1e-3 | 0.3 | (16,32,64) | 28 051 | 0.623 | 2 |
+| 3e-4 | 0.5 | (16,32,64) | 28 051 | 0.623 | 2 |
+| 3e-4 | 0.3 | (16,32,64) | 28 051 | 0.598 | 2 |
+
+Hallazgos del ajuste:
+- **La capacidad del extractor es lo que más pesa:** las cuatro redes anchas (≈102 k parámetros) superan a las angostas (28 k) por 0.07–0.14 de F1. Las angostas **subajustan**: su mejor época es la 2 y no mejoran después (subentrenan la textura/color que separa *good* de *regular*).
+- **Dropout 0.5 > 0.3** en todos los pares comparables: con un dataset pequeño, más regularización ayuda.
+- **Tasa de aprendizaje baja (3e-4) algo mejor** con dropout alto, a costa de más épocas.
+- **El ajuste sube la validación pero no el test de fotos propias:** el F1 de validación pasó de 0.69 a 0.73, pero el F1 en test de nuestras fotos quedó en 0.48 (recall *bad* = 0.00). La validación está dominada por Kaggle y en propias hay solo ~5 ejemplos *bad* en test, así que la ganancia no se traslada a nuestro dominio. **Es otra evidencia de que el cuello de botella no son los hiperparámetros sino la falta de fotos *bad* propias**, no un problema de arquitectura.
+- Datos: `experiments/results/cnn_busqueda.csv` y `cnn_config.json`.
 
 Completar con:
 - Tabla `experiments/results/comparacion_modelos.csv` (incluye la línea base).
