@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Datos: las imágenes NO se suben (pesan ~5 MB cada una). Se descargan con
+# `python -m src.main download`. Sí se suben los CSV de anotaciones.
+data/raw/**
+data/interim/**
+data/processed/**
+!data/**/.gitkeep
+!data/anotaciones_propias.csv
+
+# Modelos entrenados (pesados); las métricas y figuras sí se suben
+experiments/checkpoints/**
+!experiments/checkpoints/.gitkeep
+experiments/logs/**
+!experiments/logs/.gitkeep
+
+# SO / editores
+.DS_Store
+.vscode/
+.idea/
