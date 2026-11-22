@@ -10,15 +10,16 @@ Uso (desde la raíz del repo):
     python -m src.main features      # matriz de características
     python -m src.main train         # modelos clásicos (GridSearchCV)
     python -m src.main train_cnn     # CNN desde cero
-    python -m src.main evaluate      # métricas en test + figuras
-    python -m src.main all           # provenance -> evaluate (sin descargar)
+    python -m src.main evaluate      # métricas de calidad en test + figuras
+    python -m src.main evaluate_size # fiabilidad de la estimación de tamaño
+    python -m src.main all           # provenance -> evaluate_size (sin descargar)
 """
 from __future__ import annotations
 
 import sys
 
 STEPS = ["download", "convert", "provenance", "mixed", "index", "preprocess", "features",
-         "train", "train_cnn", "evaluate"]
+         "train", "train_cnn", "evaluate", "evaluate_size"]
 FIRST_ALL = STEPS.index("convert")  # `all` no vuelve a descargar
 
 
@@ -43,6 +44,8 @@ def run(step: str) -> None:
         from src.training.train_cnn import main
     elif step == "evaluate":
         from src.evaluation.evaluate import main
+    elif step == "evaluate_size":
+        from src.evaluation.evaluate_size import main
     else:
         raise SystemExit(f"Paso desconocido: {step}. Opciones: {STEPS + ['all']}")
     print(f"\n######## {step} ########")

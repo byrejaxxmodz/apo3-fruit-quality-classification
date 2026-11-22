@@ -65,11 +65,30 @@ Observaciones para el análisis:
 
 </details>
 
+### 4.1 Estimación de tamaño
+
+El tamaño se estima por el diámetro equivalente normalizado `d_norm` y se
+clasifica por terciles por fruta. Como las etiquetas de tamaño se derivan de
+`d_norm` y el grupo aún no anotó `size_manual`, **no hay una exactitud
+supervisada que reportar** (sería circular). En cambio se mide la **fiabilidad
+test–retest**: los grupos de casi duplicados son la misma fruta física desde
+otro ángulo, así que deberían recibir el mismo tamaño (`evaluate_size.py`).
+
+| Fuente | Grupos (≥2 fotos) | Acuerdo observado | Acuerdo por azar | κ ajustado | CV intra-grupo de d_norm |
+|--------|------------------:|------------------:|-----------------:|-----------:|-------------------------:|
+| Fotos propias | 85 | 0.69 | 0.36 | **0.52** | 0.021 |
+| Kaggle | 1208 | 0.82 | 0.36 | **0.72** | 0.008 |
+| Todas | 1293 | 0.82 | 0.36 | **0.72** | 0.009 |
+
+- Cobertura de la segmentación (único caso en que el tamaño es válido): **87.9 %** (12 567/14 301).
+- El diámetro en píxeles es **físicamente estable** (CV intra-grupo ≈ 0.01–0.02: la misma fruta mide casi igual entre tomas), pero la **clasificación por terciles es frágil en las fronteras**, sobre todo en las fotos propias (κ = 0.52 vs. 0.72 en Kaggle): un cambio pequeño de d_norm cruza el umbral del tercil.
+- Sin objeto de referencia ni distancia fija, el tamaño en píxeles **solo es comparable dentro de la misma fruta y fuente**, no en centímetros reales (ver trabajo futuro).
+- Figura: `docs/figuras/tamano_d_norm.svg` (distribución de d_norm por fuente). Datos: `tamano_distribucion.csv`, `tamano_fiabilidad.csv`.
+
 Completar con:
 - Tabla `experiments/results/comparacion_modelos.csv` (incluye la línea base).
 - Tabla de F1 por fuente (`f1_por_fuente.csv`).
 - Matrices de confusión y curvas de la CNN.
-- Resultados de la estimación de tamaño.
 
 ## 5. Análisis de resultados
 - ¿Generalizan? Brecha train–val (sobreajuste).

@@ -1,0 +1,4 @@
+fuente,n_grupos_multi,n_imagenes,acuerdo_observado,acuerdo_azar,kappa_ajustado,cv_dnorm_intragrupo_mediana
+propias,85,342,0.693,0.361,0.52,0.021
+kaggle,1208,6232,0.821,0.36,0.72,0.008
+todas,1293,6574,0.818,0.357,0.717,0.009
