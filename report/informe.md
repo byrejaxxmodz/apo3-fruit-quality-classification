@@ -16,7 +16,7 @@ _(150–200 palabras: problema, datos, modelos, mejor resultado en números, con
 _(Solo lo que el lector necesita: Otsu, características de color y textura, SVM/RF, CNN, F1 macro. Resumir `docs/formulacion_matematica.md`.)_
 
 ## 3. Metodología
-- Diagrama propio de CRISP-DM (`docs/crisp_dm.md` exportado a SVG).
+- Diagrama propio de CRISP-DM (`docs/figuras/crisp_dm.svg`, vectorial).
 - **Formulación matemática del problema** (PI3).
 - Datos: fuentes, tabla de conteos por clase, fruta y fuente; protocolo de anotación; kappa.
 - Preparación: segmentación, tamaño, split.

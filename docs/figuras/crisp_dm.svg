@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1500" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<rect x="0" y="0" width="900" height="1500" fill="#ffffff"/>
+<text x="40" y="38" font-size="19" font-weight="800" fill="#0f172a">CRISP-DM · Clasificación de calidad de fruta por visión</text>
+<rect x="40" y="66" width="26" height="26" rx="6" fill="#1d4ed8"/>
+<text x="53" y="84" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">1</text>
+<text x="74" y="84" font-size="14.5" font-weight="800" fill="#1d4ed8">Comprensión del negocio</text>
+<rect x="220" y="102" width="420" height="52" rx="9" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="430" y="124" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Clasificación manual lenta y subjetiva</text>
+<text x="430" y="140" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">en plazas de mercado</text>
+<rect x="220" y="170" width="420" height="52" rx="9" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="430" y="192" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Objetivo: calidad (good/regular/bad)</text>
+<text x="430" y="208" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">+ tamaño (pequeño/mediano/grande)</text>
+<rect x="220" y="238" width="420" height="52" rx="9" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<text x="430" y="260" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Métrica de éxito: F1 macro ≥ 0.80</text>
+<text x="430" y="276" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">en fotos propias de test</text>
+<line x1="430" y1="154" x2="430" y2="170" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="222" x2="430" y2="238" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="40" y="312" width="26" height="26" rx="6" fill="#0f766e"/>
+<text x="53" y="330" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">2</text>
+<text x="74" y="330" font-size="14.5" font-weight="800" fill="#0f766e">Comprensión de los datos</text>
+<rect x="90" y="346" width="320" height="52" rx="9" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="250" y="368" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Kaggle: Fruit Quality</text>
+<text x="250" y="384" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">(good / bad / mixed)</text>
+<rect x="450" y="346" width="320" height="52" rx="9" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="610" y="368" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Fotos propias en Drive</text>
+<text x="610" y="384" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">(good / regular)</text>
+<rect x="220" y="426" width="420" height="52" rx="9" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+<text x="430" y="448" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">EDA: clases por fruta y fuente, fondo,</text>
+<text x="430" y="464" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">desbalance · notebooks/01_eda.ipynb</text>
+<line x1="430" y1="290" x2="250" y2="346" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="290" x2="610" y2="346" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="250" y1="398" x2="390" y2="426" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="610" y1="398" x2="470" y2="426" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="40" y="500" width="26" height="26" rx="6" fill="#15803d"/>
+<text x="53" y="518" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">3</text>
+<text x="74" y="518" font-size="14.5" font-weight="800" fill="#15803d">Preparación de los datos</text>
+<rect x="210" y="534" width="440" height="52" rx="9" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="430" y="556" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">mixed_quality → recortes individuales</text>
+<text x="430" y="572" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">src/data/segment_mixed.py</text>
+<rect x="210" y="600" width="440" height="52" rx="9" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="430" y="622" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Índice + anotación manual</text>
+<text x="430" y="638" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">src/data/dataset.py</text>
+<rect x="210" y="666" width="440" height="52" rx="9" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="430" y="688" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Segmentación HSV + Otsu, recorte</text>
+<text x="430" y="704" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">128×128 fondo negro · preprocess.py</text>
+<rect x="210" y="732" width="440" height="52" rx="9" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="430" y="754" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Tamaño: d_eq = √(4A/π) normalizado,</text>
+<text x="430" y="770" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">terciles por fruta</text>
+<rect x="210" y="798" width="440" height="52" rx="9" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+<text x="430" y="820" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Split estratificado 70/15/15</text>
+<text x="430" y="836" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">por calidad y fuente (sin fuga)</text>
+<line x1="430" y1="478" x2="430" y2="534" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="586" x2="430" y2="600" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="652" x2="430" y2="666" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="718" x2="430" y2="732" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="784" x2="430" y2="798" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="40" y="872" width="26" height="26" rx="6" fill="#b45309"/>
+<text x="53" y="890" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">4</text>
+<text x="74" y="890" font-size="14.5" font-weight="800" fill="#b45309">Modelado</text>
+<rect x="90" y="910" width="320" height="52" rx="9" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+<text x="250" y="932" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">62 características manuales</text>
+<text x="250" y="948" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">color·textura·defectos·forma</text>
+<rect x="90" y="978" width="320" height="52" rx="9" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+<text x="250" y="1000" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">SVM · RF · LogReg · KNN · MLP</text>
+<text x="250" y="1016" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">GridSearchCV k=5, F1 macro</text>
+<rect x="450" y="941" width="320" height="58" rx="9" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+<text x="610" y="966" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">CNN pequeña desde cero</text>
+<text x="610" y="982" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">3 conv+GAP · búsqueda de hiperpar.</text>
+<line x1="430" y1="850" x2="250" y2="910" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="850" x2="610" y2="941" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="250" y1="962" x2="250" y2="978" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="40" y="1058" width="26" height="26" rx="6" fill="#7e22ce"/>
+<text x="53" y="1076" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">5</text>
+<text x="74" y="1076" font-size="14.5" font-weight="800" fill="#7e22ce">Evaluación</text>
+<rect x="210" y="1092" width="440" height="52" rx="9" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.5"/>
+<text x="430" y="1114" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Test: accuracy, P, R, F1 macro</text>
+<text x="430" y="1130" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">vs. línea base mayoritaria</text>
+<rect x="210" y="1158" width="440" height="52" rx="9" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.5"/>
+<text x="430" y="1180" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Matrices de confusión, curvas,</text>
+<text x="430" y="1196" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">F1 Kaggle vs. fotos propias · tamaño</text>
+<polygon points="430,1228.0 545.0,1266 430,1304.0 315.0,1266" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.5"/>
+<text x="430" y="1263" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">¿Cumple la métrica</text>
+<text x="430" y="1277" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">en fotos propias?</text>
+<line x1="250" y1="1030" x2="360" y2="1092" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="610" y1="999" x2="500" y2="1092" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="1144" x2="430" y2="1158" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="430" y1="1210" x2="430" y2="1228" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="40" y="1360" width="26" height="26" rx="6" fill="#be123c"/>
+<text x="53" y="1378" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff">6</text>
+<text x="74" y="1378" font-size="14.5" font-weight="800" fill="#be123c">Despliegue</text>
+<rect x="210" y="1392" width="440" height="56" rx="9" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.5"/>
+<text x="430" y="1416" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">App Streamlit: subir foto o cámara</text>
+<text x="430" y="1432" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">src/app/streamlit_app.py</text>
+<line x1="430" y1="1304" x2="430" y2="1392" stroke="#15803d" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="418" y="1338" width="24" height="18" rx="4" fill="#ffffff" stroke="#15803d" stroke-width="1"/>
+<text x="430" y="1351" text-anchor="middle" font-size="10.5" font-weight="700" fill="#15803d">Sí</text>
+<path d="M 545 1266 H 840 V 626 H 655" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ah)"/>
+<rect x="786" y="930" width="108" height="20" rx="4" fill="#ffffff" stroke="#dc2626" stroke-width="1"/>
+<text x="840" y="944" text-anchor="middle" font-size="10.5" font-weight="700" fill="#dc2626">No: más datos</text>
+</svg>

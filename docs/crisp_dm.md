@@ -1,6 +1,8 @@
 # CRISP-DM aplicado al proyecto
 
-> La consigna pide un **diagrama de flujo propio**, no el diagrama genérico de CRISP-DM. Este diagrama muestra lo que hace cada fase del proyecto y en qué script está. GitHub lo dibuja automáticamente; para el informe hay que exportarlo a SVG (por ejemplo en https://mermaid.live).
+> La consigna pide un **diagrama de flujo propio**, no el diagrama genérico de CRISP-DM. Este diagrama muestra lo que hace cada fase del proyecto y en qué script está. GitHub dibuja el mermaid de abajo automáticamente; el **export vectorial para el informe** está en [`docs/figuras/crisp_dm.svg`](figuras/crisp_dm.svg) (se regenera con `python scripts/gen_crisp_svg.py`).
+
+![Diagrama CRISP-DM del proyecto](figuras/crisp_dm.svg)
 
 ```mermaid
 flowchart TD
