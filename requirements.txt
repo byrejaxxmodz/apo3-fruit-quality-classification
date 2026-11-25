@@ -3,7 +3,10 @@ numpy>=1.24
 pandas>=2.0
 opencv-python-headless>=4.8
 scikit-image>=0.21
-scikit-learn>=1.3
+# Versión fija: StratifiedGroupKFold(shuffle=True) reparte distinto en 1.9, y
+# con otra versión la partición train/val/test (y los resultados versionados en
+# experiments/results/) no se reproduce. Con 1.7.2 el test coincide exactamente.
+scikit-learn==1.7.2
 joblib>=1.3
 matplotlib>=3.7
 pillow>=10

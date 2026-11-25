@@ -50,11 +50,17 @@ def download_kaggle(dest: Path = config.RAW_KAGGLE) -> Path:
 
 def download_drive(dest: Path = config.RAW_PROPIAS) -> Path:
     """Descarga la carpeta compartida de Google Drive con gdown."""
+    import inspect
+
     import gdown
 
     dest.mkdir(parents=True, exist_ok=True)
     url = f"https://drive.google.com/drive/folders/{config.DRIVE_FOLDER_ID}"
-    gdown.download_folder(url, output=str(dest), quiet=False, remaining_ok=True)
+    # gdown < 6 necesita remaining_ok=True para no abortar en carpetas grandes;
+    # gdown >= 6 ya no acepta ese parámetro.
+    extra = ({"remaining_ok": True}
+             if "remaining_ok" in inspect.signature(gdown.download_folder).parameters else {})
+    gdown.download_folder(url, output=str(dest), quiet=False, **extra)
     print(f"[drive] fotos propias descargadas en {dest}")
     return dest
 

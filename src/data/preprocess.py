@@ -74,7 +74,7 @@ def near_duplicate_groups(df: pd.DataFrame, thr: float = config.DUP_SIM_THRESHOL
         for a, b in zip(idx[ii], idx[jj]):
             parent[find(a)] = find(b)
     roots = [find(i) for i in range(len(df))]
-    return pd.Series(pd.factorize(roots)[0], index=df.index)
+    return pd.Series(pd.factorize(np.asarray(roots))[0], index=df.index)  # pandas 3 no acepta listas
 
 
 def grouped_stratified_split(df: pd.DataFrame, seed: int = config.SEED) -> pd.Series:
