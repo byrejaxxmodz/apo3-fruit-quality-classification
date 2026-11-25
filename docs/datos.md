@@ -8,35 +8,44 @@
 | Fotos propias del grupo | `data/raw/propias/` | good, regular, bad | Carpeta de Drive `proyectoAPO` |
 | Recortes de mixed_quality | `data/interim/mixed_crops/` | se etiquetan a mano | Derivado de Kaggle |
 
-### Inventario de las fotos propias (descarga del 21-nov-2026)
+### Inventario de las fotos propias (descarga del 24-nov-2026)
 
-635 archivos (425 HEIC del iPhone, 183 JPG, 27 PNG). Después de convertir los formatos quedan **605 fotos utilizables**:
+880 archivos (425 HEIC del iPhone convertidos a JPG, 428 JPG/JPEG, 25 PNG y 2 sin extensión). La verificación de procedencia (`src/data/provenance.py`) excluye **30 imágenes generadas con IA** (ver hallazgo 6), así que quedan **850 fotos reales utilizables**:
 
 | Fruta | good | regular | bad | Total |
 |-------|-----:|--------:|----:|------:|
-| apple | 169 | 5 | 3 | 177 |
-| banana | 46 | 66 | 12 | 124 |
-| guava | 31 | 54 | 0 | 85 |
-| lime | 70 | 0 | 0 | 70 |
+| apple | 169 | 24 | 3 | 196 |
+| banana | 46 | 66 | 40 | 152 |
+| granadilla | 0 | 11 | 7 | 18 |
+| guava | 31 | 62 | 103 | 196 |
+| lime | 70 | 39 | 30 | 139 |
 | orange | 86 | 36 | 27 | 149 |
-| **Total** | **402** | **161** | **42** | **605** |
+| **Total** | **402** | **238** | **210** | **850** |
 
-Estructura de la carpeta (`Orage_Bad` tiene un error de digitación; `config.FRUIT_ALIASES` la mapea a *orange*; `guava_bad/` y `lime_bad/` están vacías):
+La versión anterior (21-nov-2026) tenía 605 fotos, con solo 42 *bad* y 161 *regular*.
+
+Estructura de la carpeta (`Orage_Bad` tiene un error de digitación; `config.FRUIT_ALIASES` la mapea a *orange*):
 
 ```
 proyectoAPO/
-├── Bad_Quality_Fruits/      Apple_Bad, Orage_Bad, banana_bad, guava_bad (vacía), lime_bad (vacía)
+├── Bad_Quality_Fruits/      Apple_Bad, Orage_Bad, banana_bad, guava_bad, lime_bad
+│                            + grupoAPO_granadilla_mala_*.jpg (sueltas)
 ├── Good_Quality_Fruits/     Apple_good, Banana_good, Orange_good, guava_good, lime_good
-└── Regular_Quality_Fruits/  apple_regular, banana_regular, guava_regular, orange_regular
+└── Regular_Quality_Fruits/  apple_regular, banana_regular, guava_regular, lime_regular, orange_regular
+                             + grupoAPO_granadilla_regular_*.jpg, grupoAPO_guayaba_regular_*.jpg (sueltas)
 ```
+
+Las fotos sueltas no tienen subcarpeta de fruta: `parse_fruit` toma la fruta del nombre del archivo (`config.KNOWN_FRUITS`). La **granadilla** solo existe en las fotos propias y no tiene ejemplos *good*.
 
 ### ⚠️ Hallazgos de calidad de los datos (discutirlos en el informe)
 
-1. **Desbalance fuerte:** *bad* es el 7 % del total y en guava y lime no existe. *apple bad* tiene solo 3 fotos y *apple regular* solo 5.
+1. **Desbalance:** en las fotos propias *bad* pasó del 7 % al 25 %, pero sigue mal repartido: *apple bad* tiene solo 3 fotos reales y la granadilla no tiene *good*.
 2. **Posibles etiquetas erróneas:** `Apple_Bad/1.jpg` y `Apple_Bad/10.jpg` parecen manzanas sin defectos visibles.
 3. **Fondos no uniformes:** pared más piso de cemento, granito moteado, papel. La consigna pide un fondo simple y uniforme; esto dificulta la segmentación (ver «Segmentación» abajo).
 4. **Varias frutas en una foto:** hay al menos un caso en `orange_regular`.
 5. **La clase *regular* existe solo en nuestras fotos:** Kaggle trae únicamente *good*, *bad* y *mixed*. Hay riesgo de que el modelo asocie «regular» con el estilo de nuestras fotos. Ver el F1 por fuente en `experiments/results/f1_por_fuente.csv`.
+6. **Imágenes generadas con IA en la carpeta compartida:** 27 de las 30 fotos de `Apple_Bad` (todas menos `1.jpg`, `9.jpg` y `10.jpg`) y las 3 de `Orage_Bad` (`n1`–`n3`) tienen metadatos que las declaran sintéticas: 24 con la marca C2PA de ChatGPT/OpenAI y 6 con SynthID (Google), todas con la etiqueta IPTC `trainedAlgorithmicMedia`. Se excluyen del entrenamiento (`config.EXCLUDE_AI_GENERATED`). La consigna pide fotos **reales**; hay que retirarlas del Drive o moverlas a una carpeta aparte claramente marcada como sintética. Ver la fila 10 de `docs/etica_impactos.md`.
+7. **La conversión HEIC → JPG duplicaba fotos:** cada vez que se ejecutaba `convert` se creaba otra copia `_heic.jpg` de cada foto del iPhone. Se corrigió (ahora es idempotente) y se agregaron pruebas en `tests/test_convert.py`. Si alguien del grupo ejecutó `convert` más de una vez con la versión anterior, debe borrar los `*_heic.jpg` duplicados.
 
 ### Dataset de Kaggle (descargado el 21-nov-2026)
 
