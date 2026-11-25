@@ -9,6 +9,7 @@
 """
 from __future__ import annotations
 
+import argparse
 import json
 from typing import Iterable, Optional
 
@@ -16,9 +17,10 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold
+from sklearn.utils.class_weight import compute_sample_weight
 
 from src import config
-from src.models.classical import get_models
+from src.models.classical import SAMPLE_WEIGHTED, get_models
 
 
 def load_features():
@@ -46,7 +48,10 @@ def main(models: Optional[Iterable[str]] = None) -> pd.DataFrame:
         print(f"[train] {name}: {np.prod([len(v) for v in grid.values()])} combinaciones x {cv.n_splits} pliegues")
         gs = GridSearchCV(pipe, grid, scoring="f1_macro", cv=cv, n_jobs=-1,
                           return_train_score=True, refit=True)
-        gs.fit(Xtr, ytr, groups=gtr)
+        # GridSearchCV reparte los pesos por muestra entre los pliegues
+        fit_params = ({"clf__sample_weight": compute_sample_weight("balanced", ytr)}
+                      if name in SAMPLE_WEIGHTED else {})
+        gs.fit(Xtr, ytr, groups=gtr, **fit_params)
         best_model = gs.best_estimator_
         if name == "svm":  # la app necesita probabilidades: reentrenar con Platt
             best_model = best_model.set_params(clf__probability=True).fit(Xtr, ytr)
@@ -64,9 +69,15 @@ def main(models: Optional[Iterable[str]] = None) -> pd.DataFrame:
         print(f"         mejor F1 cv = {gs.best_score_:.3f}  {gs.best_params_}")
 
     res = pd.DataFrame(summary)
-    res.to_csv(config.RESULTS_DIR / "resumen_cv_clasicos.csv", index=False)
+    out = config.RESULTS_DIR / "resumen_cv_clasicos.csv"
+    if models and out.exists():  # entrenamiento parcial: conservar las filas de los demás modelos
+        prev = pd.read_csv(out)
+        res = pd.concat([prev[~prev["modelo"].isin(res["modelo"])], res], ignore_index=True)
+    res.to_csv(out, index=False)
     return res
 
 
 if __name__ == "__main__":
-    main()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--models", nargs="+", help="entrenar solo estos modelos (p. ej. xgboost)")
+    main(ap.parse_args().models)

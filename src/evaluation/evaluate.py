@@ -15,6 +15,8 @@ Definiciones (por clase k):
 """
 from __future__ import annotations
 
+from typing import Iterable, Optional
+
 import joblib
 import matplotlib
 
@@ -58,14 +60,23 @@ def predict_cnn(df_test: pd.DataFrame) -> np.ndarray:
     from src.models.cnn import SmallCNN
     from src.training.train_cnn import to_tensor
 
+    # Este proceso ya cargó scikit-learn y XGBoost, que traen su propia copia de
+    # OpenMP; si PyTorch abre su región paralela con la suya, el proceso se
+    # bloquea para siempre (pasa en macOS). Con un solo hilo no hay región
+    # paralela, y para inferir 2.000 recortes de 128x128 sobra.
+    torch.set_num_threads(1)
     ckpt = torch.load(config.CHECKPOINTS_DIR / "cnn.pt", map_location="cpu")
     widths = tuple(ckpt.get("widths", (32, 64, 128)))  # la búsqueda puede ajustar el ancho
     model = SmallCNN(len(config.QUALITY_CLASSES), widths=widths, dropout=ckpt["dropout"])
     model.load_state_dict(ckpt["state_dict"])
     model.eval()
-    x = torch.stack([to_tensor(cv2.imread(str(config.ROOT / c))) for c in df_test["crop"]])
-    with torch.no_grad():
-        return model(x).argmax(1).numpy()
+    preds = []
+    with torch.no_grad():  # por lotes: todo el test de una vez ocupa varios GB de activaciones
+        for i in range(0, len(df_test), 256):
+            x = torch.stack([to_tensor(cv2.imread(str(config.ROOT / c)))
+                             for c in df_test["crop"].iloc[i:i + 256]])
+            preds.append(model(x).argmax(1).numpy())
+    return np.concatenate(preds)
 
 
 def plot_cnn_curves() -> None:
@@ -85,7 +96,33 @@ def plot_cnn_curves() -> None:
     plt.close(fig)
 
 
-def main() -> pd.DataFrame:
+def _check_same_partition(df_te: pd.DataFrame, base_pred: np.ndarray, y_te: np.ndarray) -> None:
+    """Antes de mezclar resultados nuevos con los ya guardados, verifica que el
+    conjunto de test sea el mismo: los errores de la línea base (que lista todas
+    las imágenes de test que no son de la clase mayoritaria) deben coincidir."""
+    prev = config.RESULTS_DIR / "errores_baseline_mayoritaria.csv"
+    if not prev.exists():
+        return
+    old = set(pd.read_csv(prev)["path"])
+    new = set(df_te.loc[base_pred != y_te, "path"])
+    if old != new:
+        raise SystemExit(
+            f"La partición de test cambió ({len(old ^ new)} imágenes distintas): los resultados "
+            "guardados no son comparables. Ejecuta la evaluación completa (sin --models).")
+
+
+def _merge_previous(nuevo: pd.DataFrame, nombre: str) -> pd.DataFrame:
+    """Une las filas nuevas con las de los modelos que no se reevaluaron."""
+    ruta = config.RESULTS_DIR / nombre
+    if not ruta.exists():
+        return nuevo
+    prev = pd.read_csv(ruta)
+    return pd.concat([prev[~prev["modelo"].isin(nuevo["modelo"])], nuevo], ignore_index=True)
+
+
+def main(models: Optional[Iterable[str]] = None) -> pd.DataFrame:
+    """Evalúa todos los modelos entrenados o, con `models`, solo esos y los
+    agrega a las tablas existentes (reemplazando sus filas anteriores)."""
     config.FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     config.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(config.SPLITS_CSV)
@@ -97,9 +134,12 @@ def main() -> pd.DataFrame:
     preds = {}
     base = DummyClassifier(strategy="most_frequent").fit(X[~te], y[~te])
     preds["baseline_mayoritaria"] = base.predict(X[te])
+    if models:  # la línea base solo sirve para verificar la partición; sus filas no se tocan
+        _check_same_partition(df_te, preds.pop("baseline_mayoritaria"), y[te])
     for ck in sorted(config.CHECKPOINTS_DIR.glob("*.joblib")):
-        preds[ck.stem] = joblib.load(ck).predict(X[te])
-    if (config.CHECKPOINTS_DIR / "cnn.pt").exists():
+        if not models or ck.stem in models:
+            preds[ck.stem] = joblib.load(ck).predict(X[te])
+    if (config.CHECKPOINTS_DIR / "cnn.pt").exists() and (not models or "cnn" in models):
         preds["cnn"] = predict_cnn(df_te)
 
     rows, by_source = [], []
@@ -126,13 +166,23 @@ def main() -> pd.DataFrame:
         print(classification_report(y[te], p, labels=range(len(config.QUALITY_CLASSES)),
                                     target_names=config.QUALITY_CLASSES, zero_division=0))
 
-    res = pd.DataFrame(rows).sort_values("f1_macro", ascending=False)
+    res = pd.DataFrame(rows)
+    by_source = pd.DataFrame(by_source)
+    if models:  # evaluación parcial: conservar las filas de los demás modelos
+        res = _merge_previous(res, "comparacion_modelos.csv")
+        by_source = _merge_previous(by_source, "f1_por_fuente.csv")
+    res = res.sort_values("f1_macro", ascending=False)
     res.to_csv(config.RESULTS_DIR / "comparacion_modelos.csv", index=False)
-    pd.DataFrame(by_source).to_csv(config.RESULTS_DIR / "f1_por_fuente.csv", index=False)
-    plot_cnn_curves()
+    by_source.to_csv(config.RESULTS_DIR / "f1_por_fuente.csv", index=False)
+    if not models or "cnn" in models:
+        plot_cnn_curves()
     print(res.to_string(index=False))
     return res
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--models", nargs="+", help="evaluar solo estos modelos y agregarlos a las tablas")
+    main(ap.parse_args().models)

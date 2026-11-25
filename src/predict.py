@@ -55,6 +55,10 @@ def load_model(name: str):
         import torch
 
         from src.models.cnn import SmallCNN
+        # La app también carga scikit-learn/XGBoost: con un solo hilo PyTorch no
+        # abre su región paralela de OpenMP y se evita el bloqueo entre las dos
+        # copias de OpenMP (ver evaluate.predict_cnn).
+        torch.set_num_threads(1)
         ckpt = torch.load(config.CHECKPOINTS_DIR / "cnn.pt", map_location="cpu")
         widths = tuple(ckpt.get("widths", (32, 64, 128)))
         m = SmallCNN(len(config.QUALITY_CLASSES), widths=widths, dropout=ckpt["dropout"])

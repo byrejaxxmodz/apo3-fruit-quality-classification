@@ -21,6 +21,9 @@ from sklearn.svm import SVC
 
 from src import config
 
+# Modelos sin parámetro class_weight: reciben pesos por muestra al entrenar
+SAMPLE_WEIGHTED = {"xgboost"}
+
 
 def get_models() -> Dict[str, Tuple[Pipeline, dict]]:
     """Devuelve {nombre: (pipeline, rejilla)} para GridSearchCV."""
@@ -63,9 +66,16 @@ def get_models() -> Dict[str, Tuple[Pipeline, dict]]:
     }
     try:  # XGBoost es opcional
         from xgboost import XGBClassifier
+
+        # Boosting (Unidad 2): cada árbol nuevo ajusta el gradiente de la pérdida
+        # logarítmica del ensamble anterior, F_m = F_{m-1} + eta * h_m.
+        # XGBClassifier no acepta class_weight: el desbalance se compensa con
+        # pesos por muestra w_i = n / (K n_{y_i}) que pasa train_classical.py
+        # (SAMPLE_WEIGHTED), equivalentes a class_weight="balanced".
         models["xgboost"] = (
             Pipeline([("scaler", StandardScaler()),
-                      ("clf", XGBClassifier(eval_metric="mlogloss", random_state=s))]),
+                      ("clf", XGBClassifier(eval_metric="mlogloss", tree_method="hist",
+                                            n_jobs=-1, random_state=s))]),
             {"clf__n_estimators": [200, 400], "clf__max_depth": [3, 6],
              "clf__learning_rate": [0.05, 0.1]},
         )
