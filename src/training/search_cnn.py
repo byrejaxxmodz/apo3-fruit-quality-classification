@@ -134,8 +134,14 @@ def train_one(cfg, data, device, epochs, patience):
     return best_f1, best_ep, history, best_state
 
 
-def main(epochs: int = 35, patience: int = 8) -> pd.DataFrame:
+def main(epochs: int = 35, patience: int = 8, solo_mejor: bool = False) -> pd.DataFrame:
+    """Con `solo_mejor` se reentrena únicamente la configuración ganadora que ya
+    está en cnn_config.json (por ejemplo, después de corregir la partición) y se
+    conserva la rejilla anterior en vez de repetir las 8 corridas."""
     device = _device()
+    previo = None
+    if solo_mejor:
+        previo = json.loads((config.RESULTS_DIR / "cnn_config.json").read_text())
     df = pd.read_csv(config.SPLITS_CSV)
     tr, va = df[df.split == "train"], df[df.split == "val"]
     ev = tr.sample(min(len(tr), 2000), random_state=config.SEED)  # F1 train sin aumento
@@ -148,6 +154,9 @@ def main(epochs: int = 35, patience: int = 8) -> pd.DataFrame:
 
     grid = [{"lr": lr, "dropout": dr, "widths": w, "batch": BATCH, "weight_decay": WEIGHT_DECAY}
             for lr, dr, w in itertools.product(LRS, DROPOUTS, WIDTHS)]
+    if previo:
+        m = previo["mejor"]
+        grid = [{**m, "widths": tuple(m["widths"])}]
 
     rows, best = [], None
     for i, cfg in enumerate(grid, 1):
@@ -166,7 +175,8 @@ def main(epochs: int = 35, patience: int = 8) -> pd.DataFrame:
 
     res = pd.DataFrame(rows).sort_values("f1_val", ascending=False).reset_index(drop=True)
     config.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    res.to_csv(config.RESULTS_DIR / "cnn_busqueda.csv", index=False)
+    if not previo:
+        res.to_csv(config.RESULTS_DIR / "cnn_busqueda.csv", index=False)
 
     # Promover la mejor configuración como modelo final (el que usa evaluate.py)
     config.CHECKPOINTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -181,6 +191,10 @@ def main(epochs: int = 35, patience: int = 8) -> pd.DataFrame:
             "best_f1_val": round(best["f1_val"], 4),
             "epochs": epochs, "patience": patience,
             "rejilla": rows}
+    if previo:
+        info["rejilla"] = previo["rejilla"]
+        info["nota"] = ("La rejilla se evaluó con la partición anterior; con la partición actual "
+                        "solo se reentrenó la configuración ganadora (best_f1_val es de esa corrida).")
     (config.RESULTS_DIR / "cnn_config.json").write_text(json.dumps(info, indent=2, ensure_ascii=False))
 
     print("\n=== Rejilla (ordenada por F1 de validación) ===")
@@ -194,5 +208,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--epochs", type=int, default=35)
     ap.add_argument("--patience", type=int, default=8)
+    ap.add_argument("--solo-mejor", action="store_true",
+                    help="reentrenar solo la configuración ganadora de cnn_config.json")
     a = ap.parse_args()
-    main(a.epochs, a.patience)
+    main(a.epochs, a.patience, a.solo_mejor)

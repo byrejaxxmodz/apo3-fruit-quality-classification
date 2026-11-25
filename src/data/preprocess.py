@@ -14,10 +14,14 @@ no mide lo mismo que una naranja grande):
     grande   si d_norm >  P66
 
 Partición: estratificada por calidad y AGRUPADA por fotos casi idénticas
-(ráfagas de la misma fruta), para que ninguna fruta física aparezca a la vez
-en train y en test. Ver near_duplicate_groups().
+(ráfagas de la misma fruta) y por copias aumentadas de una misma foto
+(`foto_aug_3.jpg`), para que ninguna fruta física aparezca a la vez en train y
+en test. Ver near_duplicate_groups().
 """
 from __future__ import annotations
+
+import re
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -41,6 +45,21 @@ def size_class_from_terciles(df: pd.DataFrame) -> pd.Series:
     return out
 
 
+_AUG = re.compile(r"_aug_\d+$")
+
+
+def original_stem(path: str) -> str:
+    """Ruta sin extensión y sin el sufijo `_aug_N`: todas las copias aumentadas
+    de una foto comparten este valor con la original."""
+    p = Path(path)
+    return str(p.parent / _AUG.sub("", p.stem))
+
+
+def is_augmented_copy(path: str) -> bool:
+    """True si el archivo es una copia aumentada (rotada, volteada...) y no una toma nueva."""
+    return bool(_AUG.search(Path(path).stem))
+
+
 def _embedding(crop_path) -> np.ndarray:
     """Vector 32x32x3 centrado y normalizado: similitud coseno = correlación."""
     g = cv2.resize(cv2.imread(str(crop_path)), (32, 32)).astype(np.float32).ravel()
@@ -57,6 +76,11 @@ def near_duplicate_groups(df: pd.DataFrame, thr: float = config.DUP_SIM_THRESHOL
     misma fruta caen en train y test a la vez y el test sobreestima el
     desempeño (fuga de datos): con el split aleatorio, 53 de 91 imágenes de
     test tenían un «gemelo» en train.
+
+    Las copias aumentadas que alguien subió a la carpeta de fotos propias
+    (`guava_bad10_aug_2.jpg`) van al mismo grupo que su original aunque la
+    rotación baje la similitud: 17 de las 28 *bad* propias de test tenían una
+    copia de sí mismas en train antes de esta regla.
     """
     parent = list(range(len(df)))
 
@@ -73,6 +97,11 @@ def near_duplicate_groups(df: pd.DataFrame, thr: float = config.DUP_SIM_THRESHOL
         ii, jj = np.where(np.triu(sim, 1) > thr)
         for a, b in zip(idx[ii], idx[jj]):
             parent[find(a)] = find(b)
+    stems = df["path"].map(original_stem).to_numpy()
+    for idx in pd.Series(np.arange(len(df))).groupby(stems).groups.values():
+        idx = list(idx)
+        for b in idx[1:]:
+            parent[find(idx[0])] = find(b)
     roots = [find(i) for i in range(len(df))]
     return pd.Series(pd.factorize(np.asarray(roots))[0], index=df.index)  # pandas 3 no acepta listas
 

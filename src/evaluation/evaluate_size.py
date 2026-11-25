@@ -40,6 +40,7 @@ import numpy as np
 import pandas as pd
 
 from src import config
+from src.data.preprocess import is_augmented_copy
 
 RNG = np.random.default_rng(config.SEED)
 N_PERM = 200  # permutaciones para la línea base de azar
@@ -98,8 +99,10 @@ def fiabilidad(df: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for src in ["propias", "kaggle", "todas"]:
         sub = df if src == "todas" else df[df["source"] == src]
-        # solo sirven los grupos con >= 2 miembros bien segmentados
-        sub = sub[sub["seg_ok"]]
+        # solo sirven los grupos con >= 2 miembros bien segmentados. Las copias
+        # aumentadas no son una toma nueva (tienen el mismo d_norm que la
+        # original) e inflarían el acuerdo, así que se dejan fuera.
+        sub = sub[sub["seg_ok"] & ~sub["path"].map(is_augmented_copy)]
         gsz = sub.groupby("group").transform("size")
         multi = sub[gsz >= 2]
         if multi.empty:

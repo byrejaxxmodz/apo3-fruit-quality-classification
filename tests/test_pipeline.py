@@ -64,3 +64,13 @@ def test_cnn_forward():
     from src.models.cnn import SmallCNN
     out = SmallCNN(3)(torch.zeros(2, 3, 128, 128))
     assert out.shape == (2, 3)
+
+
+def test_copias_aumentadas_comparten_original():
+    from src.data.preprocess import is_augmented_copy, original_stem
+
+    base = "data/raw/propias/Bad_Quality_Fruits/guava_bad/guava_bad10"
+    assert original_stem(base + ".jpg") == original_stem(base + "_aug_3.jpg")
+    assert is_augmented_copy(base + "_aug_3.jpg")
+    assert not is_augmented_copy(base + ".jpg")
+    assert not is_augmented_copy("data/raw/propias/x/augusto_1.jpg")

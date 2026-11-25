@@ -10,7 +10,7 @@
 
 ### Inventario de las fotos propias (descarga del 24-nov-2026)
 
-880 archivos (425 HEIC del iPhone convertidos a JPG, 428 JPG/JPEG, 25 PNG y 2 sin extensión). La verificación de procedencia (`src/data/provenance.py`) excluye **30 imágenes generadas con IA** (ver hallazgo 6), así que quedan **850 fotos reales utilizables**:
+880 archivos (425 HEIC del iPhone convertidos a JPG, 428 JPG/JPEG, 25 PNG y 2 sin extensión). La verificación de procedencia (`src/data/provenance.py`) excluye **30 imágenes generadas con IA** (ver hallazgo 6), así que quedan **850 archivos utilizables**. De ellos, 148 son copias rotadas o volteadas de otras fotos (ver hallazgo 8), así que corresponden a **714 tomas distintas**:
 
 | Fruta | good | regular | bad | Total |
 |-------|-----:|--------:|----:|------:|
@@ -21,6 +21,8 @@
 | lime | 70 | 39 | 30 | 139 |
 | orange | 86 | 36 | 27 | 149 |
 | **Total** | **402** | **238** | **210** | **850** |
+
+Tomas distintas: guava *bad* 24 (de 103 archivos), lime *bad* 7 (de 30) y lime *regular* 5 (de 39); en total 402 *good*, 204 *regular* y 108 *bad*.
 
 La versión anterior (21-nov-2026) tenía 605 fotos, con solo 42 *bad* y 161 *regular*.
 
@@ -37,7 +39,7 @@ proyectoAPO/
 
 Las fotos sueltas no tienen subcarpeta de fruta: `parse_fruit` toma la fruta del nombre del archivo (`config.KNOWN_FRUITS`). La **granadilla** solo existe en las fotos propias y no tiene ejemplos *good*.
 
-### ⚠️ Hallazgos de calidad de los datos (discutirlos en el informe)
+### Hallazgos de calidad de los datos
 
 1. **Desbalance:** en las fotos propias *bad* pasó del 7 % al 25 %, pero sigue mal repartido: *apple bad* tiene solo 3 fotos reales y la granadilla no tiene *good*.
 2. **Posibles etiquetas erróneas:** `Apple_Bad/1.jpg` y `Apple_Bad/10.jpg` parecen manzanas sin defectos visibles.
@@ -46,6 +48,7 @@ Las fotos sueltas no tienen subcarpeta de fruta: `parse_fruit` toma la fruta del
 5. **La clase *regular* existe solo en nuestras fotos:** Kaggle trae únicamente *good*, *bad* y *mixed*. Hay riesgo de que el modelo asocie «regular» con el estilo de nuestras fotos. Ver el F1 por fuente en `experiments/results/f1_por_fuente.csv`.
 6. **Imágenes generadas con IA en la carpeta compartida:** 27 de las 30 fotos de `Apple_Bad` (todas menos `1.jpg`, `9.jpg` y `10.jpg`) y las 3 de `Orage_Bad` (`n1`–`n3`) tienen metadatos que las declaran sintéticas: 24 con la marca C2PA de ChatGPT/OpenAI y 6 con SynthID (Google), todas con la etiqueta IPTC `trainedAlgorithmicMedia`. Se excluyen del entrenamiento (`config.EXCLUDE_AI_GENERATED`). La consigna pide fotos **reales**; hay que retirarlas del Drive o moverlas a una carpeta aparte claramente marcada como sintética. Ver la fila 10 de `docs/etica_impactos.md`.
 7. **La conversión HEIC → JPG duplicaba fotos:** cada vez que se ejecutaba `convert` se creaba otra copia `_heic.jpg` de cada foto del iPhone. Se corrigió (ahora es idempotente) y se agregaron pruebas en `tests/test_convert.py`. Si alguien del grupo ejecutó `convert` más de una vez con la versión anterior, debe borrar los `*_heic.jpg` duplicados.
+8. **Copias aumentadas entre las fotos propias:** 148 archivos con sufijo `_aug_N` (79 de `guava_bad`, 30 de `lime_bad` y 39 de `lime_regular`) son rotaciones o volteos de solo 33 fotos originales; de las de lima no está la original. Como la rotación baja la similitud, la detección de casi duplicados no las juntaba con su original: 17 de las 28 *bad* propias de test tenían una copia suya en train, y el F1 en fotos propias estaba inflado (SVM 0.88 con la fuga, 0.82 en las fotos de test sin copia en train). Desde el 25-nov-2026 `near_duplicate_groups` une cada copia al grupo de su original (`original_stem` en `src/data/preprocess.py`) y la fiabilidad del tamaño las excluye. Las copias se pueden seguir usando para entrenar; el aumento de datos de la CNN ya se hace al vuelo, así que no hace falta subir copias al Drive.
 
 ### Dataset de Kaggle (descargado el 21-nov-2026)
 
@@ -58,7 +61,7 @@ Las fotos sueltas no tienen subcarpeta de fruta: `parse_fruit` toma la fruta del
 | Mixed Qualit_Fruits | 113 | 285 | 148 | 278 (*Lemon*) | 125 | 125 |
 
 - `Pomegranate_Good` se submuestrea a 1.200 imágenes (`config.KAGGLE_MAX_PER_FOLDER`) para no desbalancear *good*.
-- **Hallazgo ético:** las imágenes de Kaggle conservan EXIF con **coordenadas GPS**, modelo del teléfono y fecha. Es un ejemplo real de fuga de privacidad en un dataset público, y vale la pena mencionarlo en la tabla de ética.
+- **Hallazgo ético:** las imágenes de Kaggle conservan EXIF con **coordenadas GPS**, modelo del teléfono y fecha. Por eso las imágenes crudas no se redistribuyen (fila 8 de `docs/etica_impactos.md`).
 - Los grupos de casi duplicados también aplican aquí: FruitNet fotografía cada fruta desde 5 direcciones.
 
 **Qué hacer con las fotos (en orden de prioridad):** tomar fotos *bad* reales (sobre todo de manzana, guayaba y lima), más *apple regular*, y repetir las tomas sobre un fondo liso y claro.
