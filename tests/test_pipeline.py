@@ -23,6 +23,10 @@ def synthetic_fruit(radius=80, size=400, color=(30, 60, 200)):
     ("Bad Quality_Fruits/Banana_Bad/x.png", "bad", "banana"),
     ("Mixed Qualit_Fruits/Orange/x.png", "mixed", "orange"),
     ("Bad_Quality_Fruits/Orage_Bad/x.jpg", "bad", "orange"),  # alias
+    # fotos sueltas en la carpeta de calidad: la fruta sale del nombre del archivo
+    ("Bad_Quality_Fruits/grupoAPO_granadilla_mala_01.jpg", "bad", "granadilla"),
+    ("Regular_Quality_Fruits/grupoAPO_guayaba_regular_03.jpg", "regular", "guava"),
+    ("Bad_Quality_Fruits/foto_sin_fruta.jpg", "bad", "desconocida"),
 ])
 def test_parse_labels(path, quality, fruit):
     p = Path(path)

@@ -58,6 +58,10 @@ FRUIT_ALIASES = {
     "banano": "banana", "platano": "banana", "limon": "lime", "guayaba": "guava",
     "granada": "pomegranate", "lemon": "lime",
 }
+# Frutas reconocibles en el NOMBRE del archivo cuando la foto está suelta en la
+# carpeta de calidad (p. ej. Bad_Quality_Fruits/grupoAPO_granadilla_mala_01.jpg).
+# La granadilla solo existe en las fotos propias (no está en Kaggle).
+KNOWN_FRUITS = {"apple", "banana", "guava", "lime", "orange", "pomegranate", "granadilla"}
 # Máximo de imágenes por carpeta de Kaggle (Pomegranate_Good trae 5.940, el
 # resto ~1.100). Se submuestrea de forma reproducible para no desbalancear.
 KAGGLE_MAX_PER_FOLDER = 1200

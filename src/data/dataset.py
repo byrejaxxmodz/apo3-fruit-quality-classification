@@ -35,12 +35,20 @@ def parse_quality(path: Path) -> Optional[str]:
 
 
 def parse_fruit(path: Path) -> str:
-    """Primer token de la subcarpeta: 'Apple_good' -> 'apple'."""
+    """Primer token de la subcarpeta: 'Apple_good' -> 'apple'.
+
+    Si la foto está suelta en la carpeta de calidad (sin subcarpeta de fruta),
+    la fruta se busca en el nombre del archivo:
+    'Bad_Quality_Fruits/grupoAPO_granadilla_mala_01.jpg' -> 'granadilla'."""
     leaf = path.parent.name
     token = re.split(r"[\s_\-]+", leaf.strip())[0].lower()
-    if token in config.QUALITY_KEYWORDS:  # carpeta sin fruta en el nombre
-        return "desconocida"
-    return config.FRUIT_ALIASES.get(token, token)
+    if token not in config.QUALITY_KEYWORDS:
+        return config.FRUIT_ALIASES.get(token, token)
+    for tok in re.split(r"[\s_\-]+", path.stem.lower()):  # carpeta sin fruta en el nombre
+        fruta = config.FRUIT_ALIASES.get(tok, tok)
+        if fruta in config.KNOWN_FRUITS:
+            return fruta
+    return "desconocida"
 
 
 def scan_folder(root: Path, source: str) -> pd.DataFrame:
@@ -78,15 +86,22 @@ def apply_manual_annotations(df: pd.DataFrame, csv: Path = config.ANOTACIONES_CS
 
 
 def write_annotation_template(df: pd.DataFrame, csv: Path = config.ANOTACIONES_CSV) -> None:
-    """Crea la plantilla de anotación manual para las fotos propias (si no existe)."""
-    if csv.exists():
-        return
+    """Crea la plantilla de anotación manual de las fotos propias o, si ya
+    existe, le agrega al final las fotos nuevas sin tocar las filas anteriores
+    (que pueden tener anotaciones hechas a mano)."""
     own = df[df["source"] == "propias"][["path", "fruit", "quality"]].copy()
     own["size_manual"] = ""   # pequeno / mediano / grande
     own["defectos"] = ""      # golpe, mancha, podredumbre, ninguno...
     own["anotador"] = ""
-    own.to_csv(csv, index=False)
-    print(f"[dataset] plantilla de anotación creada: {csv} ({len(own)} filas)")
+    if not csv.exists():
+        own.to_csv(csv, index=False)
+        print(f"[dataset] plantilla de anotación creada: {csv} ({len(own)} filas)")
+        return
+    prev = pd.read_csv(csv, dtype=str, keep_default_na=False)
+    nuevas = own[~own["path"].isin(prev["path"])]
+    if len(nuevas):
+        pd.concat([prev, nuevas.astype(str)], ignore_index=True).to_csv(csv, index=False)
+        print(f"[dataset] {len(nuevas)} fotos nuevas agregadas a {csv.name} para anotar")
 
 
 def build_index() -> pd.DataFrame:
