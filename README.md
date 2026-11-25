@@ -21,8 +21,10 @@ Construir un sistema de visión por computador que, a partir de la foto de **una
 - Metodología **CRISP-DM** ([diagrama propio](docs/crisp_dm.md))
 - Segmentación clásica (HSV + Otsu + morfología) y estimación de tamaño por diámetro equivalente
 - 62 características manuales (color, textura LBP/GLCM, defectos, forma)
-- ML clásico con `GridSearchCV`: **SVM**, **Random Forest**, regresión logística, KNN, MLP (y XGBoost opcional)
+- ML clásico con `GridSearchCV`: **SVM**, **XGBoost**, **Random Forest**, regresión logística, KNN, MLP
 - Deep learning: **CNN pequeña entrenada desde cero**
+- Análisis del espacio de características con **PCA y LDA**, y detector de desplazamiento de dominio (Kaggle vs. fotos propias)
+- Evaluación con **intervalos de confianza** (Wilson y bootstrap por grupos) y **prueba de McNemar** con corrección de Holm para comparar modelos
 - App en **Streamlit** con subida de imagen o cámara
 
 ## Datos

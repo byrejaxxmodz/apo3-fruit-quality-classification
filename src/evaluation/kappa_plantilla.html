@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anotación de calidad</title>
+<style>
+  :root { --bg:#fafaf7; --fg:#1d1d1b; --muted:#6b6b66; --line:#d9d8d2; --good:#2f7d32; --reg:#b7791f; --bad:#b23b3b; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:16px; }
+  h1 { font-size:1.3rem; margin:.2rem 0 .6rem; }
+  p.nota { color:var(--muted); margin:.3rem 0 1rem; }
+  table { border-collapse:collapse; width:100%; font-size:.9rem; margin-bottom:1rem; }
+  td { border-top:1px solid var(--line); padding:.35rem .4rem; vertical-align:top; }
+  td:first-child { font-weight:600; white-space:nowrap; }
+  input[type=text] { font:inherit; padding:.45rem .6rem; border:1px solid var(--line); border-radius:6px; width:min(100%,320px); }
+  button { font:inherit; padding:.6rem 1rem; border-radius:8px; border:1px solid var(--line); background:#fff; cursor:pointer; }
+  button:disabled { opacity:.4; cursor:default; }
+  .fila { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+  #foto { width:100%; max-height:48vh; object-fit:contain; background:#eee; border-radius:8px; display:block; margin:.6rem 0; }
+  .opciones button { flex:1; min-width:30%; font-weight:600; color:#fff; border:none; }
+  .g { background:var(--good); } .r { background:var(--reg); } .b { background:var(--bad); }
+  .elegida { outline:3px solid var(--fg); outline-offset:2px; }
+  #progreso { color:var(--muted); font-variant-numeric:tabular-nums; }
+  .oculto { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Anotación de calidad (acuerdo entre anotadores)</h1>
+  <p class="nota">Etiqueta cada foto con tu propio criterio, sin mirar la carpeta original ni preguntarle a nadie. Usa estas definiciones:</p>
+  <table>
+    <tr><td>good</td><td>Color uniforme y propio de la madurez comercial. Sin golpes, manchas ni cortes. Forma regular.</td></tr>
+    <tr><td>regular</td><td>Apta para el consumo, con defectos leves: manchas pequeñas (menos del 10 % de la superficie), un golpe leve, madurez avanzada o color desigual.</td></tr>
+    <tr><td>bad</td><td>No apta para la venta: podredumbre, moho, golpes grandes, piel rota o manchas en más del 30 % de la superficie.</td></tr>
+  </table>
+
+  <section id="inicio">
+    <div class="fila">
+      <input id="nombre" type="text" placeholder="Tu nombre (ej. Jaime)" autocomplete="off">
+      <button id="empezar">Empezar</button>
+    </div>
+  </section>
+
+  <section id="anotar" class="oculto">
+    <div class="fila"><span id="progreso"></span></div>
+    <img id="foto" alt="Fruta a etiquetar">
+    <div class="fila opciones">
+      <button class="g" data-e="good">good (1)</button>
+      <button class="r" data-e="regular">regular (2)</button>
+      <button class="b" data-e="bad">bad (3)</button>
+    </div>
+    <div class="fila" style="margin-top:.6rem">
+      <button id="atras">← Anterior</button>
+      <button id="siguiente">Siguiente →</button>
+      <button id="descargar" disabled>Descargar CSV</button>
+    </div>
+    <p class="nota" id="aviso"></p>
+  </section>
+</main>
+<script>
+const FOTOS = /*FOTOS*/[];
+const CLAVE = "kappa-anotacion";
+let estado = { nombre: "", i: 0, etiquetas: {} };
+try { const s = JSON.parse(localStorage.getItem(CLAVE) || "null"); if (s && s.etiquetas) estado = s; } catch (e) {}
+const $ = (id) => document.getElementById(id);
+function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {} }
+
+function mostrar() {
+  const f = FOTOS[estado.i];
+  $("foto").src = f.src;
+  const hechas = Object.keys(estado.etiquetas).length;
+  $("progreso").textContent = `Foto ${estado.i + 1} de ${FOTOS.length} · ${hechas} etiquetadas`;
+  document.querySelectorAll(".opciones button").forEach(b =>
+    b.classList.toggle("elegida", estado.etiquetas[f.id] === b.dataset.e));
+  $("atras").disabled = estado.i === 0;
+  $("siguiente").disabled = estado.i === FOTOS.length - 1;
+  $("descargar").disabled = hechas < FOTOS.length;
+  $("aviso").textContent = hechas < FOTOS.length ? "" : "Listo. Descarga el CSV y envíaselo a quien calcula el kappa.";
+}
+function elegir(e) {
+  estado.etiquetas[FOTOS[estado.i].id] = e;
+  if (estado.i < FOTOS.length - 1) estado.i++;
+  guardar(); mostrar();
+}
+function empezar() {
+  const n = $("nombre").value.trim();
+  if (!n) { $("nombre").focus(); return; }
+  estado.nombre = n; guardar();
+  $("inicio").classList.add("oculto"); $("anotar").classList.remove("oculto"); mostrar();
+}
+function descargar() {
+  const filas = ["id,etiqueta,anotador"].concat(
+    FOTOS.map(f => `${f.id},${estado.etiquetas[f.id] || ""},${estado.nombre.replace(/,/g, " ")}`));
+  const blob = new Blob([filas.join("\n") + "\n"], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `kappa_${estado.nombre.toLowerCase().replace(/[^a-z0-9áéíóúñ]+/g, "_")}.csv`;
+  a.click();
+}
+$("empezar").onclick = empezar;
+$("nombre").addEventListener("keydown", e => { if (e.key === "Enter") empezar(); });
+document.querySelectorAll(".opciones button").forEach(b => b.onclick = () => elegir(b.dataset.e));
+$("atras").onclick = () => { if (estado.i > 0) { estado.i--; guardar(); mostrar(); } };
+$("siguiente").onclick = () => { if (estado.i < FOTOS.length - 1) { estado.i++; guardar(); mostrar(); } };
+$("descargar").onclick = descargar;
+document.addEventListener("keydown", e => {
+  if ($("anotar").classList.contains("oculto")) return;
+  if (e.key === "1") elegir("good");
+  if (e.key === "2") elegir("regular");
+  if (e.key === "3") elegir("bad");
+  if (e.key === "ArrowLeft") $("atras").click();
+  if (e.key === "ArrowRight") $("siguiente").click();
+});
+if (estado.nombre) { $("nombre").value = estado.nombre; }
+</script>
+</body>
+</html>
