@@ -14,6 +14,11 @@ import joblib
 import numpy as np
 import pandas as pd
 
+# XGBoost debe cargarse ANTES que PyTorch: si la CNN se carga primero, cargar
+# después el modelo XGBoost hace segfault en macOS (dos copias de OpenMP).
+# En la app eso tumbaba el servidor al pasar de "cnn" a "xgboost".
+import xgboost  # noqa: F401  (solo por el orden de carga)
+
 from src import config
 from src.data.segmentation import Segmentation, crop_square, resize_max_side, segment
 from src.features.extract import extract
