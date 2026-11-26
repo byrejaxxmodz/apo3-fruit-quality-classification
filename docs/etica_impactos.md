@@ -1,10 +1,8 @@
-# Ética e impactos (evidencias PI1 y PI2)
+# Ética e impactos
 
-> Borrador para completar y ajustar con las decisiones reales del grupo. La rúbrica pide una **tabla** que relacione cada decisión con el código de ética y una **matriz de impactos** con propuestas de mitigación.
->
-> Código de referencia: *Software Engineering Code of Ethics and Professional Practice* (ACM/IEEE-CS) y el código de ética de COPNIA (Ley 842 de 2003, Colombia). Deben citarse en IEEE.
+Código de referencia: *Software Engineering Code of Ethics and Professional Practice* (ACM/IEEE-CS) y el código de ética de COPNIA (Ley 842 de 2003, Colombia).
 
-## 1. Dilemas éticos identificados (PI1)
+## 1. Dilemas éticos identificados
 
 | # | Situación o decisión del proyecto | Riesgo ético | Principio del código | Medida adoptada |
 |---|-----------------------------------|--------------|----------------------|-----------------|
@@ -19,7 +17,7 @@
 | 9 | Presentar los resultados | Reportar solo la mejor corrida o el test usado para ajustar | ACM/IEEE 1.06, 3.10 | El test se usa una sola vez; se reportan la media y la desviación de la CV, la línea base y los intervalos de confianza |
 | 10 | Completar la clase *bad* con imágenes generadas por IA (ChatGPT, Gemini) dentro de la carpeta de fotos «propias» | Presentar datos sintéticos como recolección real (honestidad académica); el modelo aprendería el estilo del generador y no defectos reales; métricas infladas | ACM/IEEE 1.06 (honestidad), 3.10 (pruebas adecuadas), 6.07 (exactitud); la consigna exige fotos reales | `src/data/provenance.py` busca marcas C2PA, IPTC `trainedAlgorithmicMedia` y SynthID, y el índice excluye esas imágenes: **30 detectadas y excluidas** en la descarga del 24-nov-2026. Límite: si se borran los metadatos la marca desaparece, así que se complementa con revisión visual |
 
-## 2. Matriz de impactos (PI2)
+## 2. Matriz de impactos
 
 | Dimensión | Impacto positivo | Riesgo o impacto negativo | Mitigación |
 |-----------|------------------|---------------------------|------------|
