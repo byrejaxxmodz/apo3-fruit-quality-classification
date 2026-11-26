@@ -5,7 +5,7 @@ Ejecutar desde la raíz del repo, con el entorno del proyecto:
 
 Cuatro formas de dar la imagen: subir una foto, una foto de ejemplo, tomar una
 foto con la cámara del navegador o la cámara en vivo (clasifica mientras la
-fruta está frente a la cámara del computador). Para cada imagen muestra:
+fruta está frente a la cámara del computador o del iPhone). Para cada imagen muestra:
   - la clase de calidad y la probabilidad de cada clase
   - el tamaño estimado (pequeño / mediano / grande) y el diámetro normalizado
   - la segmentación usada, para que el usuario vea en qué se basó el modelo
@@ -22,6 +22,7 @@ import pandas as pd
 import streamlit as st
 
 from src import config
+from src.app.camara import abrir, listar_camaras
 from src.data.segmentation import overlay
 from src.predict import available_models, predict
 
@@ -40,6 +41,13 @@ FRUTAS = {"Cualquiera": "_global", "Manzana": "apple", "Banano": "banana", "Gran
           "Guayaba": "guava", "Lima": "lime", "Naranja": "orange"}
 CLASES = {"good": ("Buena", "green"), "regular": ("Regular", "orange"), "bad": ("Mala", "red")}
 TAMANOS = {"pequeno": "pequeño", "mediano": "mediano", "grande": "grande"}
+CUADROS_POR_SEGUNDO = 5  # en vivo: suficiente para ver el resultado sin saturar el equipo
+
+
+@st.cache_data(ttl=20)
+def camaras_disponibles() -> list:
+    """Nombres de las cámaras (vía ffmpeg); sin ffmpeg, solo la cámara 0 de OpenCV."""
+    return listar_camaras() or [0]
 
 
 @st.cache_data
@@ -102,20 +110,33 @@ def mostrar(img, model_name, fruit):
 
 
 def camara_en_vivo(model_name, fruit):
-    encendida = st.toggle("Encender la cámara del computador")
+    camara = st.selectbox("Cámara", camaras_disponibles(),
+                          format_func=lambda c: "Cámara del computador" if c == 0 else c)
+    st.caption("¿No aparece el iPhone? Bloquéalo y déjalo quieto cerca del Mac (o conéctalo por cable), con "
+               "la misma cuenta de Apple y Wi-Fi y Bluetooth encendidos. Si lo desbloqueas, macOS lo suelta.")
+    if st.button("Buscar cámaras de nuevo"):
+        camaras_disponibles.clear()
+        st.rerun()
+    encendida = st.toggle("Encender la cámara")
     st.caption("Pon una sola fruta frente a la cámara, sobre un fondo liso y con buena luz.")
     if not encendida:
         return
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        st.error("No se pudo abrir la cámara. En macOS, da permiso a la Terminal (o a VS Code) en "
-                 "Ajustes del Sistema > Privacidad y seguridad > Cámara, y vuelve a intentarlo.")
+    with st.spinner("Encendiendo la cámara…"):
+        cap = abrir(camara)
+        abierta = cap.isOpened()
+    if not abierta:
+        detalle = cap.error() if hasattr(cap, "error") else ""
+        cap.release()
+        st.error("No se pudo abrir esa cámara. Si es el iPhone, revisa que esté cerca del Mac y desbloquéalo "
+                 "una vez. En macOS, da permiso de cámara a la Terminal (o a VS Code) en Ajustes del "
+                 "Sistema > Privacidad y seguridad > Cámara." + (f"\n\nDetalle: {detalle}" if detalle else ""))
         return
     izq, der = st.columns([3, 2], gap="large")
     cuadro = izq.empty()
     resultado = der.empty()
     try:
         while True:
+            inicio = time.perf_counter()
             ok, frame = cap.read()
             if not ok:
                 st.error("La cámara dejó de enviar imágenes.")
@@ -130,6 +151,9 @@ def camara_en_vivo(model_name, fruit):
             cv2.putText(vista, texto, (12, 36), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2, cv2.LINE_AA)
             cuadro.image(rgb(vista), caption=f"En vivo · {ms:.0f} ms por cuadro", width="stretch")
             tarjeta_resultado(pred, resultado)
+            # Sin este límite el ciclo clasifica y envía cuadros tan rápido como puede, y traba el
+            # computador y el navegador (más aún compartiendo pantalla en una videollamada).
+            time.sleep(max(0.0, 1 / CUADROS_POR_SEGUNDO - (time.perf_counter() - inicio)))
     finally:
         cap.release()
 
