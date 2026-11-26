@@ -1,6 +1,6 @@
 # Formulación matemática (evidencia PI3)
 
-> Borrador para el informe. Las ecuaciones están en LaTeX, que GitHub renderiza. Hay que completar los valores reales cuando estén los resultados.
+> Versión extendida de la formulación del informe (`report/ieee/informe.tex`, sección II-A). Las ecuaciones están en LaTeX, que GitHub renderiza.
 
 ## 1. Formulación del problema
 
@@ -95,7 +95,7 @@ y con Adam más weight decay ($+\lambda\|\theta\|^2$).
 
 ## 6. Selección y métricas
 
-- **Validación cruzada estratificada (k = 5):** $\hat{\lambda} = \arg\max_\lambda \frac{1}{k}\sum_{j=1}^{k} F1_{macro}(h_{\theta(\lambda)}^{(-j)}, D_j)$
+- **Validación cruzada estratificada y agrupada (`StratifiedGroupKFold`, k = 5)**, para que las fotos de una misma fruta queden en el mismo pliegue: $\hat{\lambda} = \arg\max_\lambda \frac{1}{k}\sum_{j=1}^{k} F1_{macro}(h_{\theta(\lambda)}^{(-j)}, D_j)$
 - $P_k = \frac{TP_k}{TP_k+FP_k}$, $R_k = \frac{TP_k}{TP_k+FN_k}$, $F1_k = \frac{2P_kR_k}{P_k+R_k}$, $F1_{macro} = \frac1K\sum_k F1_k$
 - **Sobreajuste:** brecha $\Delta = F1_{train} - F1_{val}$. Se registra en `resumen_cv_clasicos.csv` y en `curvas_cnn.svg`.
 - **Acuerdo entre anotadores:** $\kappa = (p_o - p_e)/(1-p_e)$.

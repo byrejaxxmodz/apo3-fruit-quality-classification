@@ -2,15 +2,16 @@
 
 Proyecto final de **Algoritmos y Programación III** (2026-2), Ingeniería de Sistemas, Universidad Icesi.
 
-#### Estado del proyecto: Activo
+#### Estado del proyecto: Completado
+
+**Video de presentación (10 min):** https://www.youtube.com/watch?v=JPqTPEJS1IE
 
 ## Integrantes
 
-| Nombre | GitHub | Rol |
-|--------|--------|-----|
-| _Nombre 1_ | [@usuario](https://github.com/usuario) | Líder · modelado |
-| _Nombre 2_ | [@usuario](https://github.com/usuario) | Datos · anotación |
-| _Nombre 3_ | [@usuario](https://github.com/usuario) | Despliegue · informe |
+| Nombre | GitHub |
+|--------|--------|
+| Jaime Muñoz | [byrejaxxmodz](https://github.com/byrejaxxmodz) |
+| Andres Felipe Lopez | [andresfl13](https://github.com/andresfl13) |
 
 **Profesor:** Milton Sarria
 
@@ -26,6 +27,14 @@ Construir un sistema de visión por computador que, a partir de la foto de **una
 - Análisis del espacio de características con **PCA y LDA**, y detector de desplazamiento de dominio (Kaggle vs. fotos propias)
 - Evaluación con **intervalos de confianza** (Wilson y bootstrap por grupos) y **prueba de McNemar** con corrección de Holm para comparar modelos
 - App en **Streamlit** con subida de imagen o cámara
+
+## Tecnologías
+- Python 3, pandas, NumPy y Jupyter
+- OpenCV, scikit-image y Pillow (segmentación y características)
+- scikit-learn y XGBoost (modelos clásicos)
+- PyTorch (CNN)
+- Streamlit (app de despliegue)
+- pytest (pruebas)
 
 ## Datos
 - [Fruit Quality Classification](https://www.kaggle.com/datasets/ryandpark/fruit-quality-classification) (Kaggle)
@@ -65,7 +74,8 @@ calidad-frutas/
 │   ├── etica_impactos.md      # PI1 y PI2
 │   ├── instalacion.md
 │   └── figuras/               # figuras SVG para el informe
-├── report/informe.md          # borrador del informe (máx. 7 páginas)
+├── report/ieee/informe.tex    # informe final, plantilla IEEE de conferencia (máx. 7 páginas)
+├── report/informe.md          # resumen del informe y tabla de resultados
 ├── tests/                     # pruebas con pytest
 └── requirements.txt
 ```
@@ -80,9 +90,9 @@ streamlit run src/app/streamlit_app.py
 ```
 
 ## Entregables
-- [ ] Informe final (máx. 7 páginas, IEEE): [report/informe.md](report/informe.md)
-- [ ] Video de máximo 10 minutos: _enlace_
-- [ ] App funcionando: `src/app/streamlit_app.py`
+- [x] Informe final (7 páginas, IEEE): [PDF](report/ieee/informe.pdf) · fuente [report/ieee/informe.tex](report/ieee/informe.tex) · resumen en [report/informe.md](report/informe.md)
+- [x] Video de máximo 10 minutos: https://www.youtube.com/watch?v=JPqTPEJS1IE
+- [x] App funcionando: `src/app/streamlit_app.py`
 
 ## Créditos y referencias
 Dataset base: R. Park, *Fruit Quality Classification*, Kaggle. La plantilla de estructura sigue la sugerencia del curso ([miltonsarria/ETLInfrati](https://github.com/miltonsarria/ETLInfrati)). Todo código o dato de terceros se cita en el informe.

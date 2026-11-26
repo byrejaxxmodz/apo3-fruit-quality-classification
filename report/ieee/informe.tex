@@ -11,6 +11,7 @@
 \usepackage{url}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=black,citecolor=black]{hyperref} % enlaces clicables; va al final
 \renewcommand\IEEEkeywordsname{Palabras clave}
 
 \begin{document}
@@ -38,17 +39,32 @@ En las plazas de mercado la fruta se separa por calidad a ojo, y el resultado de
 calidad de frutas, visión por computador, aprendizaje automático, cambio de dominio, fuga de datos
 \end{IEEEkeywords}
 
+{\small\raggedright\noindent\textbf{Video de presentación:} \href{https://www.youtube.com/watch?v=JPqTPEJS1IE}{youtube.com/watch?v=JPqTPEJS1IE}\\
+\textbf{Código:}\\
+\href{https://github.com/byrejaxxmodz/apo3-fruit-quality-classification}{github.com/byrejaxxmodz/apo3-fruit-quality-classification}\par}
+
 \section{Introducción}
 
 Según la FAO, cerca del 14\,\% de los alimentos que se producen en el mundo se pierde entre la cosecha y la venta al por menor \cite{fao2019}. En Colombia, el Departamento Nacional de Planeación estimó en 9.76 millones de toneladas al año la pérdida y el desperdicio de alimentos, alrededor del 34\,\% de lo disponible para consumo humano \cite{dnp2016}. Una parte de esa pérdida ocurre en la comercialización, donde la fruta se clasifica a mano. En una plaza de mercado esa clasificación la hace una persona mirando cada pieza; es lenta, y dos vendedores pueden no estar de acuerdo sobre la misma fruta.
 
 Automatizar esa decisión con una cámara barata es un problema de visión por computador conocido. Existen datasets públicos con fotos de frutas etiquetadas por calidad, como FruitNet \cite{meshram2022}, y trabajos que reportan exactitudes cercanas al 99.7\,\% sobre él \cite{morshed2022}. Esas cifras se obtienen con fotos del mismo origen en entrenamiento y prueba. No sabíamos si se mantendrían con fotos tomadas por nosotros, con otros celulares, otra luz y variedades locales; la granadilla, por ejemplo, no está en FruitNet.
 
-El objetivo fue construir un sistema que reciba la foto de una fruta y devuelva su calidad en tres clases y una clase de tamaño, y medir qué tan bien funciona con fotos propias. Los aportes son: un conjunto de fotos propias con tres clases de calidad, incluida regular, que el dataset público no tiene; una comparación entre clasificadores clásicos sobre características manuales y una red convolucional pequeña, con resultados por fuente, intervalos de confianza y pruebas pareadas; la detección de dos fugas de datos y de imágenes generadas con IA; y una aplicación web de demostración. El código está en \url{https://github.com/byrejaxxmodz/apo3-fruit-quality-classification}.
+El objetivo fue construir un sistema que reciba la foto de una fruta y devuelva su calidad en tres clases y una clase de tamaño, y medir qué tan bien funciona con fotos propias. Los aportes son: un conjunto de fotos propias con tres clases de calidad, incluida regular, que el dataset público no tiene; una comparación entre clasificadores clásicos sobre características manuales y una red convolucional pequeña, con resultados por fuente, intervalos de confianza y pruebas pareadas; la detección de dos fugas de datos y de imágenes generadas con IA; y una aplicación web de demostración. El código y el video están enlazados debajo de las palabras clave.
 
 \section{Fundamentos teóricos}
 
+\subsection{Formulación del problema}
+Dada la foto $I\in[0,255]^{H\times W\times 3}$ de una fruta, el sistema calcula dos funciones: $f_q(I)=\hat y_q\in\mathcal{Q}=\{$good, regular, bad$\}$, la calidad, y $f_s(I)=\hat y_s\in\mathcal{S}=\{$pequeño, mediano, grande$\}$, el tamaño. La función $f_s$ no se aprende, sino que se calcula con la máscara de segmentación (Sección~\ref{sec:seg}). La función $f_q$ se aprende de $N$ ejemplos etiquetados $(I_i,y_i)$. En los modelos clásicos $f_q=h_\theta\circ\phi$, donde $\phi(I)=\mathbf{x}\in\mathbb{R}^{62}$ es el vector de características de la Sección~\ref{sec:desc} y $h_\theta$ el clasificador. En la CNN la representación también se aprende. Salvo KNN, que no se entrena, y Random Forest, que construye cada árbol reduciendo la impureza de Gini, los modelos ajustan sus parámetros minimizando el riesgo empírico ponderado
+\begin{equation}
+\hat\theta=\arg\min_\theta\;\frac{1}{N}\sum_{i=1}^{N} w_{y_i}\,\ell\big(y_i,h_\theta(\mathbf{x}_i)\big)+\Omega(\theta),
+\label{eq:erm}
+\end{equation}
+donde $\ell$ es la pérdida de cada modelo (bisagra en el SVM, entropía cruzada en la regresión logística, XGBoost y la CNN) y $\Omega$ su regularización. El peso $w_k=N/(KN_k)$ de la clase $k$, que tiene $N_k$ ejemplos, compensa el desbalance en los modelos que admiten pesos. Los hiperparámetros, como $C$ y $\gamma$ en el SVM, se eligen maximizando el F1 macro en validación cruzada agrupada.
+
+El problema es complejo por cuatro razones. Dentro de cada clase hay mucha variación por variedad, madurez, luz y cámara. La frontera de la clase regular es subjetiva. Esa clase tiene pocos ejemplos y viene de una sola fuente, lo que abre la puerta a atajos. Y el tamaño real no se puede recuperar de una foto sin escala.
+
 \subsection{Segmentación y tamaño}
+\label{sec:seg}
 Las fotos tienen una sola fruta sobre un fondo neutro, que tiene saturación cercana a cero en el espacio HSV; la fruta tiene saturación alta. El histograma del canal de saturación $S$ es entonces bimodal, y el método de Otsu \cite{otsu1979} elige el umbral que maximiza la varianza entre las dos clases de píxeles:
 \begin{equation}
 t^* = \arg\max_t \; \omega_0(t)\,\omega_1(t)\,[\mu_0(t)-\mu_1(t)]^2,
@@ -60,6 +76,7 @@ d_{eq}=\sqrt{4A/\pi}, \qquad d_{norm}=d_{eq}/\min(H,W).
 Con el modelo de cámara estenopeica, $d_{norm}$ es proporcional a $D f / Z$, donde $D$ es el diámetro real, $f$ la distancia focal y $Z$ la distancia a la cámara. Sin una distancia fija o un objeto de referencia, $d_{norm}$ solo permite comparar frutas fotografiadas en las mismas condiciones.
 
 \subsection{Descriptores de color y textura}
+\label{sec:desc}
 El color se describe con histogramas normalizados de los canales H, S y V, que separan el tono de la iluminación, y con la media, la desviación y la asimetría de cada canal Lab; una mancha oscura sesga la distribución de L. La textura se describe con patrones binarios locales uniformes (LBP) \cite{ojala2002}, que codifican cómo se compara cada píxel con sus vecinos, y con cuatro estadísticos de la matriz de co-ocurrencia de niveles de gris (GLCM) \cite{haralick1973}: contraste, homogeneidad, energía y correlación. Se añaden la fracción de píxeles oscuros y marrones como indicio de defectos, y la circularidad, la solidez y la relación de aspecto del contorno.
 
 \subsection{Clasificadores}
@@ -128,7 +145,7 @@ La fuente principal es el dataset Fruit Quality Classification de Kaggle \cite{p
 \centering
 \footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrrrrr}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrr}
 \toprule
  & \multicolumn{2}{c}{Kaggle} & \multicolumn{3}{c}{Fotos propias} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-6}
@@ -144,8 +161,9 @@ Granadilla & -- & -- & -- & 11 & 7 \\
 \midrule
 Total & 6\,908 & 6\,788 & 402 & 238 (204) & 210 (108) \\
 \bottomrule
-\multicolumn{6}{p{0.92\columnwidth}}{\scriptsize Entre paréntesis, tomas distintas cuando hay copias rotadas de una misma foto.}
-\end{tabular}
+\end{tabular*}
+\par\smallskip
+\parbox{\columnwidth}{\scriptsize Entre paréntesis, tomas distintas cuando hay copias rotadas de una misma foto.}
 \end{table}
 
 \subsection{Control de calidad de los datos}
@@ -154,14 +172,21 @@ Revisar los datos antes de entrenar cambió los resultados más que cualquier aj
 La clase regular solo existe en nuestras fotos. Un modelo podría aprender entonces que una foto de celular colombiano es regular sin mirar la fruta. Por eso todos los resultados se reportan también por fuente.
 
 \subsection{Preparación}
-Cada foto se reduce a 512 píxeles en su lado mayor, se segmenta y se recorta en un cuadro de $128\times128$ con el fondo en negro, para que el modelo no vea el entorno. La clase de tamaño se asigna con los terciles de $d_{norm}$ por fuente y por fruta: una naranja grande no mide lo mismo que una lima grande, y en Kaggle la fruta ocupa más cuadro que en nuestras fotos.
+Cada foto se reduce a 512 píxeles en su lado mayor, se segmenta y se recorta en un cuadro de $128\times128$ con el fondo en negro, para que el modelo no vea el entorno. La clase de tamaño se asigna con los terciles de $d_{norm}$ por fuente y por fruta: una naranja grande no mide lo mismo que una lima grande, y en Kaggle la fruta ocupa más cuadro que en nuestras fotos. No la etiquetamos a ojo, porque sin un objeto de referencia una persona tampoco puede saber el tamaño real de la fruta en la foto. Con una regla escrita, todas las fotos se miden con el mismo criterio, y la regla se valida con la repetibilidad entre tomas de la misma fruta (Sección~\ref{sec:resultados}).
 
 La partición es 70/15/15, estratificada por calidad y agrupada. Dos recortes de la misma carpeta quedan en el mismo grupo si la similitud coseno entre sus miniaturas de $32\times32$ supera 0.95, y además cada copia rotada se une al grupo de su original. En la primera versión del proyecto la partición era aleatoria: 53 de las 91 fotos propias de prueba tenían una gemela casi idéntica en entrenamiento, y el F1 macro del SVM en fotos propias bajó de 0.97 a 0.75 al agrupar. Más adelante encontramos que las copias rotadas no se parecían lo suficiente para caer en el mismo grupo: 17 de las 28 fotos bad propias de prueba tenían una copia suya en entrenamiento. Los resultados de este informe usan la partición corregida, con 111 fotos propias en prueba (59 good, 23 regular y 29 bad).
 
 \subsection{Modelado}
-Los clasificadores clásicos se entrenaron con un pipeline de estandarización y clasificador, de modo que la media y la desviación se calculan solo con los datos de entrenamiento de cada pliegue. Los hiperparámetros de cada modelo se eligieron con búsqueda en rejilla y validación cruzada agrupada de cinco pliegues, maximizando el F1 macro. El desbalance se compensó con pesos $w_k=N/(K N_k)$, donde $N_k$ es el número de ejemplos de la clase $k$.
+Las características diseñadas describen directamente lo que separa las clases: color, manchas y textura. Además necesitan menos datos que una red, que debe aprender esa representación por sí misma. Por eso son la base, y la CNN sirve de comparación. Descartamos tres alternativas:
+\begin{itemize}
+\item Un detector de objetos como YOLO: cada foto tiene una sola fruta, y habría que anotar cajas.
+\item Una red de segmentación como U-Net: necesita máscaras hechas a mano, y con fondo uniforme Otsu es suficiente.
+\item El aprendizaje por transferencia: la guía del curso lo permite, pero recomienda entrenar desde cero. Queda como trabajo futuro.
+\end{itemize}
 
-La CNN tiene tres bloques convolucionales de 32, 64 y 128 filtros, promedio global, dropout y dos capas densas, con 101\,923 parámetros. Durante el entrenamiento cada recorte se voltea, se rota múltiplos de 90° y se le varían la saturación y el brillo al azar. Exploramos ocho configuraciones (tasa de aprendizaje $10^{-3}$ o $3\cdot10^{-4}$, dropout 0.3 o 0.5, y dos anchos de red) con 35 épocas como máximo y parada temprana según el F1 de validación. Ganó la tasa $3\cdot10^{-4}$ con dropout 0.5 y la red ancha. La búsqueda se hizo con la partición anterior; con la partición corregida reentrenamos solo esa configuración. Usamos scikit-learn \cite{pedregosa2011}, XGBoost y PyTorch \cite{paszke2019}, con la GPU de un portátil Apple.
+Los clasificadores clásicos se entrenaron con un pipeline de estandarización y clasificador, de modo que la media y la desviación se calculan solo con los datos de entrenamiento de cada pliegue. Los hiperparámetros de cada modelo se eligieron con búsqueda en rejilla y validación cruzada agrupada de cinco pliegues, maximizando el F1 macro. El desbalance se compensó con los pesos $w_k$ de (\ref{eq:erm}).
+
+La CNN tiene tres bloques convolucionales de 32, 64 y 128 filtros, promedio global, dropout y dos capas densas, con 101\,923 parámetros. Durante el entrenamiento cada recorte se voltea, se rota múltiplos de $90^\circ$ y se le varían la saturación y el brillo al azar. Exploramos ocho configuraciones (tasa de aprendizaje $10^{-3}$ o $3\cdot10^{-4}$, dropout 0.3 o 0.5, y dos anchos de red) con 35 épocas como máximo y parada temprana según el F1 de validación. Ganó la tasa $3\cdot10^{-4}$ con dropout 0.5 y la red ancha. La búsqueda se hizo con la partición anterior; con la partición corregida reentrenamos solo esa configuración. Usamos scikit-learn \cite{pedregosa2011}, XGBoost y PyTorch \cite{paszke2019}, con la GPU de un portátil Apple.
 
 \subsection{Evaluación}
 El conjunto de prueba se usó una sola vez, al final. Reportamos el F1 macro global, el de cada fuente y el recall de las clases regular y bad en nuestras fotos, comparados con una línea base que siempre predice la clase mayoritaria. Los intervalos de confianza son del 95\,\%, con 2\,000 remuestreos por grupos para el F1.
@@ -258,7 +283,7 @@ La regresión logística muestra el riesgo que anticipamos: en nuestras fotos cl
 Morshed et al. \cite{morshed2022} reportan una exactitud de 99.67\,\% en FruitNet con DenseNet201 preentrenada y una partición aleatoria 60/20/20. Nuestros modelos clásicos obtienen un F1 de 0.97 en las imágenes de Kaggle con una partición agrupada, así que en ese dominio el problema está casi resuelto incluso sin redes profundas. Ese trabajo no menciona agrupar las fotos de una misma fruta; en nuestro caso, no agrupar elevó el F1 en fotos propias de 0.75 a 0.97. Tampoco evalúa con fotos de otra fuente, que es justo donde nuestros modelos pierden diez puntos o más.
 
 \subsection{Limitaciones}
-La prueba en fotos propias tiene 111 imágenes de 62 frutas físicas, y por eso los intervalos son anchos. La prueba de McNemar supone imágenes independientes, y varias fotos de una misma fruta no lo son, así que sus valores $p$ son algo optimistas. Cada foto propia la etiquetó una sola persona y no medimos el acuerdo entre anotadores. El tamaño no está calibrado en centímetros. La búsqueda de hiperparámetros de la CNN se hizo con la partición anterior y cada configuración se entrenó una sola vez.
+La prueba en fotos propias tiene 111 imágenes de 62 frutas físicas, y por eso los intervalos son anchos. La prueba de McNemar supone imágenes independientes, y varias fotos de una misma fruta no lo son, así que sus valores $p$ son algo optimistas. Cada foto propia la etiquetó una sola persona y no medimos el acuerdo entre anotadores. El tamaño no está calibrado en centímetros. La búsqueda de hiperparámetros de la CNN se hizo con la partición anterior y cada configuración se entrenó una sola vez. En el análisis exploratorio apareció otro caso de copias: 28 archivos que son recortes y rotaciones de solo dos fotos de banano bad, que la partición no agrupó. Por eso 4 de las 29 bad propias de prueba tienen copias en entrenamiento. Esto no cambia las conclusiones, porque el SVM falla 3 de esas 4 y XGBoost ninguna.
 
 \section{Ética e impactos}
 
@@ -282,7 +307,27 @@ EXIF con GPS en el dataset público y en nuestras fotos & Revelar dónde se toma
 \end{tabular}
 \end{table}
 
-Con los resultados de la Sección~\ref{sec:resultados}, el sistema no puede decidir solo: en nuestras fotos los mejores modelos clasifican como good cerca de una de cada seis frutas bad. Lo evaluamos entonces como apoyo a quien clasifica. En lo social, ofrece el mismo criterio en todos los puestos y muestra la máscara y las probabilidades, de modo que el vendedor puede ver en qué se basa la recomendación. En lo económico, el costo es el de un celular o una cámara web, pero cada falso bad es fruta buena que se vende más barata y cada falso good es un reclamo del comprador; el balance depende de un umbral que todavía no calibramos. En lo ambiental, separar la fruta regular permite venderla con descuento o para jugos en vez de botarla, y la inferencia corre en la CPU de un portátil, sin GPU, así que su consumo de energía es bajo. En lo global, los criterios de calidad cambian entre países, y un modelo entrenado con fruta de otro país pierde desempeño con la local, como vimos; llevarlo a otro mercado exige fotos de ese mercado.
+El análisis inicial de impactos, hecho sin resultados, está en el repositorio. La Tabla~\ref{tab:impactos} lo actualiza con lo que midieron los resultados: cada riesgo se apoya en una cifra del proyecto y cada mitigación responde a ese riesgo. La conclusión principal es que el sistema no puede decidir solo, porque en nuestras fotos los mejores modelos clasifican como good cerca de una de cada seis frutas bad. Por eso lo proponemos como apoyo a quien clasifica.
+
+\begin{table}[t]
+\caption{Matriz de impactos con la evidencia del proyecto y su mitigación}
+\label{tab:impactos}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{1.15cm}p{1.9cm}p{2.25cm}p{2.3cm}}
+\toprule
+Dimensión & Beneficio & Riesgo y evidencia & Mitigación \\
+\midrule
+Social & El mismo criterio en todos los puestos; la app muestra la máscara y las probabilidades & Sensación de vigilancia si la cámara queda fija en un puesto. Seguridad del comprador: el sistema deja pasar como good 5 de 29 bad propias, y una fruta bad puede tener moho o podredumbre & La cámara encuadra solo la fruta y el fondo se borra antes de clasificar. La app no guarda imágenes. El sistema recomienda y una persona decide \\
+Económica & Cuesta lo que un celular o una cámara web, no una clasificadora industrial & Un falso good genera reclamos del comprador. Un falso bad hace vender barata fruta buena: el SVM no comete ninguno en 59 good propias, el KNN comete 2 & Elegir la clase de menor costo esperado, $\hat y=\arg\min_k\allowbreak\sum_j C_{kj}\,P(j\mid\mathbf{x})$, con los costos $C_{kj}$ que fije el vendedor \\
+Ambiental & La fruta regular se vende con descuento o para jugo en vez de botarse & Energía de entrenar y de clasificar en tiempo real & Modelos que corren en la CPU de un portátil (75~ms por foto); en vivo se clasifican solo 5 cuadros por segundo; parada temprana al entrenar la CNN \\
+Global & El método sirve para otras frutas y otros mercados & Las variedades y las normas de calidad cambian por país: el F1 baja de 0.97 en fruta de India a 0.86 en la nuestra. Leyes de datos distintas (Ley 1581, GDPR) & Fotografiar el mercado de destino y medir el F1 por fuente antes de usar el sistema allí. Recortes sin metadatos \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El consumo de energía es bajo. Si suponemos que un portátil consume unos 30~W bajo carga, clasificar una foto gasta unos 2~J, y mil fotos menos de 0.001~kWh. Las ocho configuraciones de la búsqueda de la CNN tardaron en total 1.5 horas, unos 0.05~kWh. La regla de costo mínimo de la Tabla~\ref{tab:impactos} es la mitigación económica más directa. Si dejar pasar una fruta bad cuesta más que rebajar una buena, la regla exige menos probabilidad para predecir bad, y el recall de esa clase sube a costa de más falsos bad. No la aplicamos porque esos costos los debe fijar quien vende.
 
 \section{Conclusiones y trabajo futuro}
 
