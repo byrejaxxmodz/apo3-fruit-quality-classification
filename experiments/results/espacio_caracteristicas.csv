@@ -1,0 +1,2 @@
+n_imagenes,dim,varianza_pc1,varianza_pc2,varianza_pc1_pc2,componentes_90,componentes_95,lda_varianza_ld1,dominio_auc_todas,dominio_bal_acc_todas,dominio_auc_solo_good_bad,dominio_bal_acc_solo_good_bad
+14546,62,0.13314429,0.10274226,0.23588654,29,37,0.91377586,0.9569192379054425,0.888996186091259,0.9604045692459227,0.9034897837639728

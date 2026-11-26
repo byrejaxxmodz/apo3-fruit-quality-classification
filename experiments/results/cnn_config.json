@@ -10,7 +10,7 @@
     "batch": 32,
     "weight_decay": 0.0001
   },
-  "best_f1_val": 0.7671,
+  "best_f1_val": 0.7376,
   "epochs": 35,
   "patience": 8,
   "rejilla": [
@@ -94,5 +94,6 @@
       "epocas_corridas": 29,
       "segundos": 679.8
     }
-  ]
+  ],
+  "nota": "La rejilla se evaluó con la partición anterior; con la partición actual solo se reentrenó la configuración ganadora (best_f1_val es de esa corrida)."
 }

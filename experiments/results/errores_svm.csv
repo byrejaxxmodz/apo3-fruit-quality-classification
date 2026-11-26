@@ -1,57 +1,76 @@
 path,source,fruit,quality,prediccion
-data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_171454_1.jpg,kaggle,apple,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_171455.jpg,kaggle,apple,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_171456.jpg,kaggle,apple,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172559.jpg,kaggle,apple,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Guava_Bad/IMG20200728185001.jpg,kaggle,guava,bad,regular
-data/raw/kaggle/Bad Quality_Fruits/Lime_Bad/IMG20200728190813.jpg,kaggle,lime,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Lime_Bad/IMG20200728190826.jpg,kaggle,lime,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Lime_Bad/IMG_7011.JPG,kaggle,lime,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Lime_Bad/IMG_7030.JPG,kaggle,lime,bad,regular
-data/raw/kaggle/Bad Quality_Fruits/Lime_Bad/IMG_7329.JPG,kaggle,lime,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG20200728190154_01.jpg,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_20190923_175729.jpg,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2514.JPG,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2515.JPG,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2561.JPG,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2570.JPG,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2576.JPG,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2578.JPG,kaggle,orange,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Pomegranate_Bad/IMG20200728125320.jpg,kaggle,pomegranate,bad,good
-data/raw/kaggle/Bad Quality_Fruits/Pomegranate_Bad/IMG20200728182916.jpg,kaggle,pomegranate,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG20200728175919.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190824_175302.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172254.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172255.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172255_1.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172256.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172256_1.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172257.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172257_1.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172258.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172258_1.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172259.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172259_1.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172300.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172300_1.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172301.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172302.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Apple_Bad/IMG_20190910_172454.jpg,kaggle,apple,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Banana_Bad/IMG20200729190335.jpg,kaggle,banana,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Banana_Bad/IMG20200730132830_01.jpg,kaggle,banana,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Banana_Bad/IMG20200730132850.jpg,kaggle,banana,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Banana_Bad/IMG_7839.JPG,kaggle,banana,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Guava_Bad/IMG20200729173225.jpg,kaggle,guava,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Lime_Bad/IMG20200728191032.jpg,kaggle,lime,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG20200728190106.jpg,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG20200728190143.jpg,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG20200728190150.jpg,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_20190923_181556.jpg,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_20190923_182100_1.jpg,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_20190923_182210.jpg,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2360.JPG,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Orange_Bad/IMG_2547.JPG,kaggle,orange,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Pomegranate_Bad/IMG20200728182652.jpg,kaggle,pomegranate,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Pomegranate_Bad/IMG20200728182712.jpg,kaggle,pomegranate,bad,good
+data/raw/kaggle/Bad Quality_Fruits/Pomegranate_Bad/IMG20200728182955.jpg,kaggle,pomegranate,bad,good
 data/raw/kaggle/Bad Quality_Fruits/Pomegranate_Bad/IMG_20190822_084456.jpg,kaggle,pomegranate,bad,good
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190809_150520.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190809_150742.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190809_155758.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190809_120702.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190809_151052.jpg,kaggle,apple,good,bad
 data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190809_165458.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190812_183258.jpg,kaggle,apple,good,bad
 data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190812_183411.jpg,kaggle,apple,good,bad
 data/raw/kaggle/Good Quality_Fruits/Apple_Good/20190812_185246.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174058.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174112.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174408.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174409.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728180956.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728181035.jpg,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG_9387.JPG,kaggle,apple,good,bad
-data/raw/kaggle/Good Quality_Fruits/Banana_Good/IMG_8483.JPG,kaggle,banana,good,bad
-data/raw/kaggle/Good Quality_Fruits/Guava_Good/20190813_121318.jpg,kaggle,guava,good,regular
-data/raw/kaggle/Good Quality_Fruits/Guava_Good/IMG20200728184618_01.jpg,kaggle,guava,good,bad
-data/raw/kaggle/Good Quality_Fruits/Orange_Good/IMG_2011.JPG,kaggle,orange,good,bad
-data/raw/kaggle/Good Quality_Fruits/Orange_Good/IMG_20190924_151019.jpg,kaggle,orange,good,bad
-data/raw/kaggle/Good Quality_Fruits/Pomegranate_Good/20190820_153336.jpg,kaggle,pomegranate,good,bad
-data/raw/kaggle/Good Quality_Fruits/Pomegranate_Good/IMG20200728181707_01.jpg,kaggle,pomegranate,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174035.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174052.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174053.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174440.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728174440_01.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728180950.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728181006.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728181007.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG20200728181057.jpg,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Apple_Good/IMG_9402.JPG,kaggle,apple,good,bad
+data/raw/kaggle/Good Quality_Fruits/Banana_Good/IMG20200729190220.jpg,kaggle,banana,good,bad
+data/raw/kaggle/Good Quality_Fruits/Banana_Good/IMG_8975.JPG,kaggle,banana,good,bad
+data/raw/kaggle/Good Quality_Fruits/Banana_Good/IMG_9402.JPG,kaggle,banana,good,bad
+data/raw/kaggle/Good Quality_Fruits/Banana_Good/IMG_9456.JPG,kaggle,banana,good,bad
+data/raw/kaggle/Good Quality_Fruits/Orange_Good/IMG20200728135628.jpg,kaggle,orange,good,bad
+data/raw/kaggle/Good Quality_Fruits/Orange_Good/IMG20200728161559.jpg,kaggle,orange,good,bad
+data/raw/kaggle/Good Quality_Fruits/Orange_Good/IMG20200729173747_01.jpg,kaggle,orange,good,bad
+data/raw/kaggle/Good Quality_Fruits/Orange_Good/IMG_1874.JPG,kaggle,orange,good,bad
+data/raw/kaggle/Good Quality_Fruits/Pomegranate_Good/IMG20200728125613_27108.jpg,kaggle,pomegranate,good,bad
+data/raw/kaggle/Good Quality_Fruits/Pomegranate_Good/IMG20200728182114_01.jpg,kaggle,pomegranate,good,bad
 data/raw/kaggle/Good Quality_Fruits/Pomegranate_Good/IMG20200728182137.jpg,kaggle,pomegranate,good,bad
-data/raw/propias/Bad_Quality_Fruits/Apple_Bad/10.jpg,propias,apple,bad,good
-data/raw/propias/Bad_Quality_Fruits/Apple_Bad/9.jpg,propias,apple,bad,good
-data/raw/propias/Bad_Quality_Fruits/Orage_Bad/1794858711985.jpg,propias,orange,bad,regular
-data/raw/propias/Bad_Quality_Fruits/banana_bad/banana_001_003.jpg,propias,banana,bad,good
-data/raw/propias/Good_Quality_Fruits/Apple_good/IMG_3542.jpg,propias,apple,good,regular
-data/raw/propias/Good_Quality_Fruits/Apple_good/IMG_3543.jpg,propias,apple,good,regular
-data/raw/propias/Good_Quality_Fruits/Orange_good/8a043c9c-a731-4afa-99df-70f3b00c05c0.jpg,propias,orange,good,regular
+data/raw/propias/Bad_Quality_Fruits/banana_bad/banana_001_007.jpg,propias,banana,bad,good
+data/raw/propias/Bad_Quality_Fruits/banana_bad/banana_002_007.jpg,propias,banana,bad,good
+data/raw/propias/Bad_Quality_Fruits/banana_bad/banana_002_008.jpg,propias,banana,bad,good
+data/raw/propias/Bad_Quality_Fruits/lime_bad/20260602_070421_aug_005.jpg,propias,lime,bad,regular
+data/raw/propias/Bad_Quality_Fruits/lime_bad/20260602_070421_aug_006.jpg,propias,lime,bad,regular
+data/raw/propias/Bad_Quality_Fruits/lime_bad/20260602_070424_aug_002.jpg,propias,lime,bad,good
+data/raw/propias/Bad_Quality_Fruits/lime_bad/20260602_070424_aug_003.jpg,propias,lime,bad,regular
+data/raw/propias/Bad_Quality_Fruits/lime_bad/20260602_070424_aug_004.jpg,propias,lime,bad,good
 data/raw/propias/Good_Quality_Fruits/Orange_good/e1a43af3-4dec-4b1b-b9aa-11143b490601.jpg,propias,orange,good,regular
-data/raw/propias/Regular_Quality_Fruits/apple_regular/grupoAPO_manzana_regular_01.jpg,propias,apple,regular,good
-data/raw/propias/Regular_Quality_Fruits/apple_regular/grupoAPO_manzana_regular_02.jpg,propias,apple,regular,good
+data/raw/propias/Good_Quality_Fruits/guava_good/IMG_3384.jpg,propias,guava,good,regular
 data/raw/propias/Regular_Quality_Fruits/grupoAPO_guayaba_regular_07.jpg,propias,guava,regular,bad
 data/raw/propias/Regular_Quality_Fruits/guava_regular/IMG_3457.jpg,propias,guava,regular,good
 data/raw/propias/Regular_Quality_Fruits/guava_regular/grupoAPO_guayaba_regular_06.jpg,propias,guava,regular,bad
