@@ -24,7 +24,7 @@
 <text x="250" y="384" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">(good / bad / mixed)</text>
 <rect x="450" y="346" width="320" height="52" rx="9" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
 <text x="610" y="368" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Fotos propias en Drive</text>
-<text x="610" y="384" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">(good / regular)</text>
+<text x="610" y="384" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">(good / regular / bad) · sin IA</text>
 <rect x="220" y="426" width="420" height="52" rx="9" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
 <text x="430" y="448" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">EDA: clases por fruta y fuente, fondo,</text>
 <text x="430" y="464" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">desbalance · notebooks/01_eda.ipynb</text>
@@ -48,8 +48,8 @@
 <text x="430" y="754" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Tamaño: d_eq = √(4A/π) normalizado,</text>
 <text x="430" y="770" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">terciles por fruta</text>
 <rect x="210" y="798" width="440" height="52" rx="9" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
-<text x="430" y="820" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Split estratificado 70/15/15</text>
-<text x="430" y="836" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">por calidad y fuente (sin fuga)</text>
+<text x="430" y="820" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Split 70/15/15 estratificado por calidad</text>
+<text x="430" y="836" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">y agrupado por casi duplicados (sin fuga)</text>
 <line x1="430" y1="478" x2="430" y2="534" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
 <line x1="430" y1="586" x2="430" y2="600" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
 <line x1="430" y1="652" x2="430" y2="666" stroke="#64748b" stroke-width="2" marker-end="url(#ah)"/>
@@ -62,7 +62,7 @@
 <text x="250" y="932" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">62 características manuales</text>
 <text x="250" y="948" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">color·textura·defectos·forma</text>
 <rect x="90" y="978" width="320" height="52" rx="9" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
-<text x="250" y="1000" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">SVM · RF · LogReg · KNN · MLP</text>
+<text x="250" y="1000" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">SVM · RF · XGBoost · LogReg · KNN · MLP</text>
 <text x="250" y="1016" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">GridSearchCV k=5, F1 macro</text>
 <rect x="450" y="941" width="320" height="58" rx="9" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
 <text x="610" y="966" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">CNN pequeña desde cero</text>
@@ -75,7 +75,7 @@
 <text x="74" y="1076" font-size="14.5" font-weight="800" fill="#7e22ce">Evaluación</text>
 <rect x="210" y="1092" width="440" height="52" rx="9" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.5"/>
 <text x="430" y="1114" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Test: accuracy, P, R, F1 macro</text>
-<text x="430" y="1130" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">vs. línea base mayoritaria</text>
+<text x="430" y="1130" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">vs. línea base · IC 95 % y McNemar</text>
 <rect x="210" y="1158" width="440" height="52" rx="9" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1.5"/>
 <text x="430" y="1180" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Matrices de confusión, curvas,</text>
 <text x="430" y="1196" text-anchor="middle" font-size="10.5" font-weight="400" fill="#475569">F1 Kaggle vs. fotos propias · tamaño</text>

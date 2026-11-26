@@ -12,7 +12,7 @@ flowchart TD
     end
     subgraph D["2 · Comprensión de los datos"]
         D1["Kaggle: Fruit Quality Classification<br/>(good / bad / mixed)"]
-        D2["Fotos propias en Drive<br/>(good / regular)"]
+        D2["Fotos propias en Drive<br/>(good / regular / bad) · sin IA"]
         D1 & D2 --> D3["EDA: clases por fruta y fuente,<br/>resolución, fondo, desbalance<br/>notebooks/01_eda.ipynb"]
     end
     subgraph P["3 · Preparación"]
@@ -20,17 +20,17 @@ flowchart TD
         P1["Índice + anotación manual<br/>src/data/dataset.py"]
         P2["Segmentación HSV + Otsu<br/>recorte 128×128 con fondo negro<br/>src/data/preprocess.py"]
         P3["Tamaño: d_eq = √(4A/π) normalizado<br/>terciles por fruta"]
-        P4["Split estratificado 70/15/15<br/>por calidad y fuente"]
+        P4["Split 70/15/15 estratificado por calidad<br/>y agrupado por casi duplicados"]
         P0 --> P1 --> P2 --> P3 --> P4
     end
     subgraph M["4 · Modelado"]
         M1["62 características manuales<br/>color · textura · defectos · forma"]
-        M2["SVM · Random Forest · LogReg · KNN · MLP<br/>GridSearchCV k=5, F1 macro"]
+        M2["SVM · Random Forest · XGBoost · LogReg · KNN · MLP<br/>GridSearchCV k=5, F1 macro"]
         M3["CNN pequeña desde cero<br/>3 bloques conv + GAP, aumento de datos"]
         M1 --> M2
     end
     subgraph E["5 · Evaluación"]
-        E1["Test: accuracy, P, R, F1 macro<br/>vs. línea base mayoritaria"]
+        E1["Test: accuracy, P, R, F1 macro<br/>vs. línea base · IC 95 % y McNemar"]
         E2["Matrices de confusión, curvas,<br/>F1 Kaggle vs. fotos propias"]
         E3{"¿Cumple la métrica<br/>en fotos propias?"}
         E1 --> E2 --> E3

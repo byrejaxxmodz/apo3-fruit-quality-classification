@@ -94,7 +94,7 @@ arrow(cx, 222, cx, 238)
 
 phase_label(40, 312, "2", "Comprensión de los datos", "D")
 chip(250, 372, 320, ["Kaggle: Fruit Quality", "(good / bad / mixed)"], "D")
-chip(610, 372, 320, ["Fotos propias en Drive", "(good / regular)"], "D")
+chip(610, 372, 320, ["Fotos propias en Drive", "(good / regular / bad) · sin IA"], "D")
 chip(cx, 452, 420, ["EDA: clases por fruta y fuente, fondo,", "desbalance · notebooks/01_eda.ipynb"], "D")
 arrow(cx, 290, 250, 346)   # N3 -> D1
 arrow(cx, 290, 610, 346)   # N3 -> D2
@@ -106,21 +106,21 @@ chip(cx, 560, 440, ["mixed_quality → recortes individuales", "src/data/segment
 chip(cx, 626, 440, ["Índice + anotación manual", "src/data/dataset.py"], "P")
 chip(cx, 692, 440, ["Segmentación HSV + Otsu, recorte", "128×128 fondo negro · preprocess.py"], "P")
 chip(cx, 758, 440, ["Tamaño: d_eq = √(4A/π) normalizado,", "terciles por fruta"], "P")
-chip(cx, 824, 440, ["Split estratificado 70/15/15", "por calidad y fuente (sin fuga)"], "P")
+chip(cx, 824, 440, ["Split 70/15/15 estratificado por calidad", "y agrupado por casi duplicados (sin fuga)"], "P")
 arrow(cx, 478, cx, 534)    # D3 -> P0
 for y in (586, 652, 718, 784):
     arrow(cx, y, cx, y + 14)
 
 phase_label(40, 872, "4", "Modelado", "M")
 chip(250, 936, 320, ["62 características manuales", "color·textura·defectos·forma"], "M")
-chip(250, 1004, 320, ["SVM · RF · LogReg · KNN · MLP", "GridSearchCV k=5, F1 macro"], "M")
+chip(250, 1004, 320, ["SVM · RF · XGBoost · LogReg · KNN · MLP", "GridSearchCV k=5, F1 macro"], "M")
 chip(610, 970, 320, ["CNN pequeña desde cero", "3 conv+GAP · búsqueda de hiperpar."], "M", h=58)
 arrow(cx, 850, 250, 910)   # P4 -> M1
 arrow(cx, 850, 610, 941)   # P4 -> CNN
 arrow(250, 962, 250, 978)  # M1 -> M2
 
 phase_label(40, 1058, "5", "Evaluación", "E")
-chip(cx, 1118, 440, ["Test: accuracy, P, R, F1 macro", "vs. línea base mayoritaria"], "E")
+chip(cx, 1118, 440, ["Test: accuracy, P, R, F1 macro", "vs. línea base · IC 95 % y McNemar"], "E")
 chip(cx, 1184, 440, ["Matrices de confusión, curvas,", "F1 Kaggle vs. fotos propias · tamaño"], "E")
 diamond(cx, 1266, 230, 76, ["¿Cumple la métrica", "en fotos propias?"], "E")
 arrow(250, 1030, cx - 70, 1092)   # M2 -> E1
