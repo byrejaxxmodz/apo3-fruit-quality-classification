@@ -1,6 +1,6 @@
 # Clasificación de calidad y tamaño de frutas con visión por computador: de un dataset público a fotos propias
 
-Jaime Muñoz, Andres Felipe Lopez y Sebastian Castillo. Algoritmos y Programación III, Universidad Icesi, 2026-2.
+Jaime Muñoz y Andres Felipe Lopez. Algoritmos y Programación III, Universidad Icesi, 2026-2.
 
 El informe final está en [`report/ieee/informe.tex`](ieee/informe.tex), con la plantilla oficial de conferencia de IEEE. Para compilarlo, sube a Overleaf `informe.tex` y la carpeta `figuras/`.
 

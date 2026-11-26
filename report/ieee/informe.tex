@@ -26,11 +26,6 @@ Cali, Colombia}
 \IEEEauthorblockA{\textit{Ingeniería de Sistemas} \\
 \textit{Universidad Icesi}\\
 Cali, Colombia}
-\and
-\IEEEauthorblockN{Sebastian Castillo}
-\IEEEauthorblockA{\textit{Ingeniería de Sistemas} \\
-\textit{Universidad Icesi}\\
-Cali, Colombia}
 }
 
 \maketitle
@@ -125,7 +120,7 @@ Seguimos las fases de CRISP-DM \cite{chapman2000}. La Fig.~\ref{fig:flujo} resum
 \end{figure*}
 
 \subsection{Datos}
-La fuente principal es el dataset Fruit Quality Classification de Kaggle \cite{park2024}, una copia de FruitNet \cite{meshram2022}: seis frutas fotografiadas en India, en carpetas good, bad y mixed. La carpeta mixed tiene varias frutas por foto y no la usamos. La granada buena tenía 5\,940 fotos y las demás carpetas unas 1\,100, así que tomamos como máximo 1\,200 por carpeta, con una semilla fija. Las fotos propias las tomamos los tres integrantes con nuestros celulares, una fruta por foto sobre fondo liso, y cada foto se guardó en la carpeta de su clase siguiendo una definición escrita: good, sin defectos visibles; regular, apta para el consumo pero con defectos leves (manchas en menos del 10\,\% de la superficie, un golpe leve o madurez avanzada); bad, no apta para la venta (podredumbre, moho, piel rota o manchas en más del 30\,\%). La Tabla~\ref{tab:datos} resume los conteos.
+La fuente principal es el dataset Fruit Quality Classification de Kaggle \cite{park2024}, una copia de FruitNet \cite{meshram2022}: seis frutas fotografiadas en India, en carpetas good, bad y mixed. La carpeta mixed tiene varias frutas por foto y no la usamos. La granada buena tenía 5\,940 fotos y las demás carpetas unas 1\,100, así que tomamos como máximo 1\,200 por carpeta, con una semilla fija. Las fotos propias las tomamos con nuestros celulares, una fruta por foto sobre fondo liso, y cada foto se guardó en la carpeta de su clase siguiendo una definición escrita: good, sin defectos visibles; regular, apta para el consumo pero con defectos leves (manchas en menos del 10\,\% de la superficie, un golpe leve o madurez avanzada); bad, no apta para la venta (podredumbre, moho, piel rota o manchas en más del 30\,\%). La Tabla~\ref{tab:datos} resume los conteos.
 
 \begin{table}[t]
 \caption{Imágenes por fruta, fuente y clase de calidad}
