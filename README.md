@@ -4,7 +4,7 @@ Proyecto final de **Algoritmos y Programación III** (2026-2), Ingeniería de Si
 
 #### Estado del proyecto: Completado
 
-**Video de presentación (10 min):** https://www.youtube.com/watch?v=JPqTPEJS1IE
+**Video de presentación (10 min):** https://www.youtube.com/watch?v=ujYcXWM8miQ
 
 ## Integrantes
 
@@ -91,7 +91,7 @@ streamlit run src/app/streamlit_app.py
 
 ## Entregables
 - [x] Informe final (7 páginas, IEEE): [PDF](report/ieee/informe.pdf) · fuente [report/ieee/informe.tex](report/ieee/informe.tex) · resumen en [report/informe.md](report/informe.md)
-- [x] Video de máximo 10 minutos: https://www.youtube.com/watch?v=JPqTPEJS1IE
+- [x] Video de máximo 10 minutos: https://www.youtube.com/watch?v=ujYcXWM8miQ
 - [x] App funcionando: `src/app/streamlit_app.py`
 
 ## Créditos y referencias

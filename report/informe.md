@@ -2,7 +2,7 @@
 
 Jaime Muñoz y Andres Felipe Lopez. Algoritmos y Programación III, Universidad Icesi, 2026-2.
 
-Video de presentación: https://www.youtube.com/watch?v=JPqTPEJS1IE
+Video de presentación: https://www.youtube.com/watch?v=ujYcXWM8miQ
 
 El informe final está en [`report/ieee/informe.tex`](ieee/informe.tex), con la plantilla oficial de conferencia de IEEE. Para compilarlo, sube a Overleaf `informe.tex` y la carpeta `figuras/`.
 
